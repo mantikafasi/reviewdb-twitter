@@ -1,10 +1,11 @@
 import "./webpack/patchWebpack";
 
-import { after, before } from "spitroast";
+import { after } from "spitroast";
 import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
 import { Patcher } from "jsposed";
 const patcher = new Patcher();
 
+// ik this is terrible once I get it to work I will replace with saner search
 waitFor(m => m?.rs,(m)=>{
   const React = findByProps("useState");
 
@@ -25,8 +26,6 @@ waitFor(m => m?.rs,(m)=>{
             }
           }
         });
-      } else {
-        //console.log("found route", element?.key);
       }
     });
     console.log("route", response);
@@ -56,45 +55,23 @@ waitFor(m => m?.rs,(m)=>{
       console.log("rsposed", ctx.thisObject);
     }
   })
-
-  /*
-  after("render", m.rs.prototype, (args, response) => {
-    if (response._owner?.memoizedProps?.children?.length === 12 ) {
-        let kid = response._owner.memoizedProps.children[0];
-        console.log("rs", kid);
-        response._owner.memoizedProps.children.push(
-          React.cloneElement(kid, {
-              path:"/:screenName([a-zA-Z0-9_]{1,20})/(gamers)",
-              type : React.createElement("div", {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%"}}, "Gamers")
-          })
-        );
-        console.log("added custom route'2", response);
-        return response;
-      }
-  });
-  */
-
 })
 
 awaitModule("getState").then(R => {
   const React = findByProps("useState");
 
-  // ik this is terrible once I get it to work I will replace with saner search
-  //let module3 = findByProps("resetIsModalScrollerRendered");
-  let tweetsModule = find(m => m?.Z?.WrappedComponent?.prototype?.render?.toString().includes("isRestrictedSession:e"));
-  let contentModuke = findByProps("nO");
-
   waitFor(m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),(m)=>{
     console.log("linkModule loaded", m);
 
     after("render", m.Z.prototype, (args, response) => {
+      let kid = response.props.children[0];
       response.props.children.push(
-        React.cloneElement(response.props.children[0], {
+        React.cloneElement(kid, {
           "key":"gamers",
           isActive: () => document.location.pathname.endsWith("/gamers"),
           "viewType": "gamers",
           "to": {
-              "pathname": "/TheVendyMachine/gamers",
+              "pathname": "/TheVendyMachine/gamers", // TODO make this dynamic
               "query": {}
           },
           "children": "Gamers",
@@ -102,7 +79,7 @@ awaitModule("getState").then(R => {
           "retainScrollPosition": true
       })
       )
-      console.log("linkModule", response);response.props.children
+      console.log("linkModule", response);
     })
   })
 
