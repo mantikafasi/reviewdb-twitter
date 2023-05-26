@@ -5,19 +5,41 @@ import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
 import { Patcher } from "jsposed";
 const patcher = new Patcher();
 
-awaitModule("useState").then(React => {
-  let module = find(m => m?.rs);
+waitFor(m => m?.rs,(m)=>{
+  // F0 is React Router
+  // EN is withRouter
+  // AW is possibly <Route>
+  after("render", m.F0.prototype, (args, response) => {
+    response.props.children.props.children.props.children.props.children[1].props.children.props.children.props.children.forEach(element => {
+      if (Array.isArray(element)) {
+        element.forEach(element2 => {
+
+          if (element2?.key?.includes("(likes|media")) {
+            element2.key = "(likes|media|gamers)";
+            element2.props.path = element2.props.path.replace("(likes|media)", "(likes|media|gamers)");
+            //element2.props.component = React.createElement("div", {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%"}}, "Gamers");
+
+            // here I add my custom route to the array so whenever you call /reviews it will open twitter user's profile
+            console.log(element2);
+            console.log("added custom route");
+          }
+        });
+      } else {
+        //console.log("found route", element?.key);
+      }
+    });
+  });
+
+})
+
+awaitModule("getState").then(R => {
+  const React = findByProps("useState");
+
   // ik this is terrible once I get it to work I will replace with saner search
   let module3 = findByProps("resetIsModalScrollerRendered");
   let tweetsModule = find(m => m?.Z?.WrappedComponent?.prototype?.render?.toString().includes("isRestrictedSession:e"));
-  let linkModule = find(m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"));
   let contentModuke = findByProps("nO");
 
-  /* this module is lazy loaded
-  before("render", linkModule.Z.prototype, (args) =>{
-    console.log("render2", linkModule.Z.prototype);
-  })
-  */
   waitFor(m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),(m)=>{
     console.log("linkModule loaded", m);
 
@@ -31,12 +53,12 @@ awaitModule("useState").then(React => {
     after("render", m.Z.prototype, (args, response) => {
       response.props.children.push(
         React.cloneElement(response.props.children[0], {
-          "viewType": "reviews",
+          "viewType": "gamers",
           "to": {
-              "pathname": "/TheVendyMachine/reviews",
+              "pathname": "/TheVendyMachine/gamers",
               "query": {}
           },
-          "children": "Reviews",
+          "children": "Gamers",
           "color": "primary",
           "retainScrollPosition": true
       })
@@ -71,43 +93,9 @@ awaitModule("useState").then(React => {
   after("render", tweetsModule.Z.WrappedComponent.prototype, (args, response) => {
     console.log("render", tweetsModule.Z.WrappedComponent.prototype);
     console.log(response);
-    /*
-    if (document.URL.includes("gamers")) {
-      return React.createElement("div", {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%"}}, "Gamers");
-    }
-    */
   });
 
-  // F0 is React Router
-  // EN is withRouter
-  // AW is possibly <Route>
-  after("render", module.F0.prototype, (args, response) => {
 
-    response.props.children.props.children.props.children.props.children[1].props.children.props.children.props.children.forEach(element => {
-      if (Array.isArray(element)) {
-        element.forEach(element2 => {
 
-          if (element2?.key?.includes("(likes|media")) {
-            element2.key = "(likes|media|gamers)";
-            element2.props.path = element2.props.path.replace("(likes|media)", "(likes|media|gamers)");
-            //element2.props.component = React.createElement("div", {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%"}}, "Gamers");
-
-            // here I add my custom route to the array so whenever you call /reviews it will open twitter user's profile
-            console.log(element2);
-            console.log("added custom route");
-          }
-        });
-      } else {
-        //console.log("found route", element?.key);
-      }
-    });
-  });
-
-  /*
-  after("render", module2, (args, response)  =>{
-    console.log("render2", args);
-    console.log(response);
-  })
-  */
   console.log("content loaded");
 });
