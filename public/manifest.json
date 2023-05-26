@@ -9,25 +9,19 @@
     "48": "icons/icon_48.png",
     "128": "icons/icon_128.png"
   },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "action": {
-    "default_title": "Reviewdb Twitter",
-    "default_popup": "popup.html"
-  },
-  "permissions": [
-    "storage"
-  ],
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "run_at": "document_idle",
+      "matches": ["https://twitter.com/*"],
+      "run_at": "document_start",
       "js": [
-        "contentScript.js"
+        "content.js"
       ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+        "resources": ["contentScript.js"],
+        "matches": ["https://twitter.com/*"]
     }
   ]
 }
