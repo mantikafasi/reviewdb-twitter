@@ -326,6 +326,10 @@ export function waitFor(filter: string | string[] | FilterFn, callback: Callback
   subscriptions.set(filter, callback);
 }
 
+export function awaitModule(filter: string | string[] | FilterFn) {
+  return new Promise<any>(resolve => waitFor(filter, resolve));
+}
+
 export function addListener(callback: CallbackFn) {
   listeners.add(callback);
 }
