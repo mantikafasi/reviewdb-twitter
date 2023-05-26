@@ -5,7 +5,7 @@ import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
 import { Patcher } from "jsposed";
 const patcher = new Patcher();
 
-awaitModule("getState").then(React => {
+awaitModule("useState").then(React => {
   let module = find(m => m?.rs);
   // ik this is terrible once I get it to work I will replace with saner search
   let module3 = findByProps("resetIsModalScrollerRendered");
@@ -29,7 +29,21 @@ awaitModule("getState").then(React => {
     */
 
     after("render", m.Z.prototype, (args, response) => {
-      console.log("linkModule", response);
+      response.props.children.push(
+        React.cloneElement(response.props.children[0], {
+          "viewType": "reviews",
+          "to": {
+              "pathname": "/TheVendyMachine/reviews",
+              "query": {}
+          },
+          "children": "Reviews",
+          "color": "primary",
+          "retainScrollPosition": true
+      })
+      )
+      console.log("linkModule", response);response.props.children
+
+
     })
   })
 
