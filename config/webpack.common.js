@@ -46,6 +46,11 @@ const common = {
           },
         ],
       },
+      {
+        test: /\.tsx?$/, // Match TypeScript files
+        use: 'ts-loader', // Use ts-loader for TypeScript files
+        exclude: /node_modules/, // Exclude node_modules directory from processing
+      },
     ],
   },
   plugins: [

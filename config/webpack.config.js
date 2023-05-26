@@ -14,6 +14,10 @@ const config = (env, argv) =>
       //background: PATHS.src + '/background.js',
     },
     devtool: argv.mode === 'production' ? false : 'source-map',
+    resolve:{
+      extensions:['.js','.jsx','.ts','.tsx'],
+      symlinks: false,
+    },
   });
 
 module.exports = config;

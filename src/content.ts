@@ -1,7 +1,9 @@
 import "./webpack/patchWebpack";
 
-import { after } from "spitroast";
+import { after, before } from "spitroast";
 import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
+import { Patcher } from "jsposed";
+const patcher = new Patcher();
 
 awaitModule("getState").then(React => {
   let module = find(m => m?.rs);
@@ -16,6 +18,20 @@ awaitModule("getState").then(React => {
     console.log("render2", linkModule.Z.prototype);
   })
   */
+  waitFor(m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),(m)=>{
+    console.log("linkModule loaded", m);
+
+    /*
+    patcher.after("render", m.Z.prototype, (ctx,ctx2) =>{
+
+      console.log("linkModule", ctx.thisObject,ctx2);
+    })
+    */
+
+    after("render", m.Z.prototype, (args, response) => {
+      console.log("linkModule", response);
+    })
+  })
 
   after("render", module.AW.prototype, (args, response) => {
     console.log("awk", response);
