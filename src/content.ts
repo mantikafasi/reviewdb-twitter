@@ -1,6 +1,5 @@
 import "./webpack/patchWebpack";
 
-import { after } from "spitroast";
 import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
 import { Patcher } from "jsposed";
 import ReviewsView from "./components/ReviewsView";
@@ -14,8 +13,9 @@ waitFor(m => m?.rs,(m)=>{
   // F0 is React Router
   // EN is withRouter
   // AW is possibly <Route>
-  after("render", m.F0.prototype, (args, response) => {
-    response.props.children.props.children.props.children.props.children[1].props.children.props.children.props.children.forEach(element => {
+  patcher.after(m.F0.prototype,"render", (ctx) => {
+
+    ctx.result.props.children.props.children.props.children.props.children[1].props.children.props.children.props.children.forEach(element => {
       if (Array.isArray(element)) {
         element.forEach(element2 => {
 
@@ -30,12 +30,8 @@ waitFor(m => m?.rs,(m)=>{
         });
       }
     });
-    console.log("route", response);
+    console.log("route", ctx.result);
   });
-
-  patcher.before(window,"fetch", ctx=>{
-    console.log("fetch", ctx.thisObject,ctx.args);
-  })
 
   patcher.before(m.rs.prototype, "render", (ctx)=>{
 
@@ -51,15 +47,6 @@ waitFor(m => m?.rs,(m)=>{
             },
         }, React.createElement(ReviewsView, {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "white", fontSize: "40px"}}, "Gamers")  )
       );
-      /*
-      ctx.thisObject.props.children.unshift(
-        React.createElement(m.rs.prototype, {
-          path:"/:screenName([a-zA-Z0-9_]{1,20})/gamers",
-          children: React.createElement("div", {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%"}}, "Gamers")
-        })
-      )
-      */
-      console.log("rsposed", ctx.thisObject);
     }
   })
 })
@@ -76,9 +63,10 @@ awaitModule("getState").then(R => {
   waitFor(m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),(m)=>{
     console.log("linkModule loaded", m);
 
-    after("render", m.Z.prototype, (args, response) => {
-      let kid = response.props.children[0];
-      response.props.children.push(
+    patcher.after(m.Z.prototype,"render", (ctx) => {
+
+      let kid = ctx.result.props.children[0];
+      ctx.result.props.children.push(
         React.cloneElement(kid, {
           "key":"gamers",
           isActive: () => document.location.pathname.endsWith("/gamers"),
@@ -92,7 +80,7 @@ awaitModule("getState").then(R => {
           "retainScrollPosition": true
       })
       )
-      console.log("linkModule", response);
+      console.log("linkModule", ctx.result);
     })
   })
 
