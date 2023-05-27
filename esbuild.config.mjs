@@ -3,6 +3,8 @@ import * as esbuild from 'esbuild'
 let ctx = await esbuild.context({
   entryPoints: ['./src/content.ts'],
   bundle: true,
+  jsxFactory: "React.createElement",
+  jsxFragment: "React.Fragment",
   outfile: './build/contentScript.js',
 })
 

@@ -15,7 +15,7 @@
     "strict": true,
     "noImplicitAny": false,
     "target": "ESNEXT",
-    "jsx": "preserve"
+    "jsx": "react"
   },
   "include": ["src/**/*"]
 }
