@@ -3,12 +3,13 @@ import "./webpack/patchWebpack";
 import { after } from "spitroast";
 import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
 import { Patcher } from "jsposed";
-import ReviewsView from "./ReviewsView";
+import ReviewsView from "./components/ReviewsView";
 const patcher = new Patcher();
 
 // ik this is terrible once I get it to work I will replace with saner search
 waitFor(m => m?.rs,(m)=>{
   const React = findByProps("useState");
+  window.React = React;
 
   // F0 is React Router
   // EN is withRouter
@@ -45,6 +46,7 @@ waitFor(m => m?.rs,(m)=>{
         React.cloneElement(kid, {
             path:"/:screenName([a-zA-Z0-9_]{1,20})/gamers",
             props: {
+
               path:"/:screenName([a-zA-Z0-9_]{1,20})/gamers",
             },
         }, React.createElement(ReviewsView, {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "white", fontSize: "40px"}}, "Gamers")  )
@@ -59,6 +61,12 @@ waitFor(m => m?.rs,(m)=>{
       */
       console.log("rsposed", ctx.thisObject);
     }
+  })
+})
+
+waitFor(m => m.toString().includes("getDerivedStateFromError"), (m) => {
+  patcher.instead(m.prototype, "componentDidCatch", (ctx) => {
+    console.error("deranged twitter error boundry", ctx.args[0], ctx.args[1]);
   })
 })
 

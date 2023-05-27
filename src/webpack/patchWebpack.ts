@@ -30,7 +30,6 @@ Object.defineProperty(window, WEBPACK_CHUNK, {
       console.info(`Patching ${WEBPACK_CHUNK}.push`);
       _initWebpack(v);
       patchPush();
-
       // @ts-ignore
       delete window[WEBPACK_CHUNK];
       window[WEBPACK_CHUNK] = v;
