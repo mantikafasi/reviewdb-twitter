@@ -3,6 +3,7 @@ import "./webpack/patchWebpack";
 import { after } from "spitroast";
 import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
 import { Patcher } from "jsposed";
+import ReviewsView from "./ReviewsView";
 const patcher = new Patcher();
 
 // ik this is terrible once I get it to work I will replace with saner search
@@ -31,6 +32,10 @@ waitFor(m => m?.rs,(m)=>{
     console.log("route", response);
   });
 
+  patcher.before(window,"fetch", ctx=>{
+    console.log("fetch", ctx.thisObject,ctx.args);
+  })
+
   patcher.before(m.rs.prototype, "render", (ctx)=>{
 
     if (ctx.thisObject.props.children.length === 12 ) {
@@ -42,7 +47,7 @@ waitFor(m => m?.rs,(m)=>{
             props: {
               path:"/:screenName([a-zA-Z0-9_]{1,20})/gamers",
             },
-        }, React.createElement("div", {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "white", fontSize: "40px"}}, "Gamers")  )
+        }, React.createElement(ReviewsView, {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "white", fontSize: "40px"}}, "Gamers")  )
       );
       /*
       ctx.thisObject.props.children.unshift(
