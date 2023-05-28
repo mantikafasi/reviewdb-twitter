@@ -6,9 +6,9 @@ export default function ReviewComponent(props: { review: Review }) {
   return (
     <div className="tweet-wrap">
       <div className="tweet-header">
-        <img src={props.review.sender.profilePhoto} alt="" className="avator" />
+        <img src={props.review.sender.avatarURL} alt="" className="avator" />
         <div className="tweet-header-info">
-          Manti  <span>{props.review.sender.username}</span><span> Jun 27
+          {props.review.sender.displayName  }  <span>{props.review.sender.username}</span><span> {new Date(props.review.timestamp * 1000).toLocaleString()}
           </span>
           <p>{props.review.comment}</p>
         </div>

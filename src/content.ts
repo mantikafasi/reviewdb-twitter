@@ -34,18 +34,18 @@ waitFor(m => m?.rs,(m)=>{
   });
 
   patcher.before(m.rs.prototype, "render", (ctx)=>{
-
+    console.log("rspatch", ctx.thisObject,ctx.thisObject.props.prototype);
     if (ctx.thisObject.props.children.length === 12 ) {
       let kid = ctx.thisObject.props.children[0];
-
+      const twitterId = ctx.thisObject.props.children[0].props.children.props.userId // this looks terrible but all elements in array has this so...
+      console.log(twitterId);
       ctx.thisObject.props.children.unshift(
         React.cloneElement(kid, {
             path:"/:screenName([a-zA-Z0-9_]{1,20})/gamers",
             props: {
-
               path:"/:screenName([a-zA-Z0-9_]{1,20})/gamers",
             },
-        }, React.createElement(ReviewsView, {style: {display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "white", fontSize: "40px"}}, "Gamers")  )
+        }, React.createElement(ReviewsView, {twitterId:twitterId}, "Gamers")  )
       );
     }
   })
@@ -66,13 +66,16 @@ awaitModule("getState").then(R => {
     patcher.after(m.Z.prototype,"render", (ctx) => {
 
       let kid = ctx.result.props.children[0];
+      const pathName = kid.props.to.pathname;
+
+      let newPath = "/" + pathName.substr(pathName.lastIndexOf('/') + 1)
       ctx.result.props.children.push(
         React.cloneElement(kid, {
           "key":"gamers",
           isActive: () => document.location.pathname.endsWith("/gamers"),
           "viewType": "gamers",
           "to": {
-              "pathname": "/TheVendyMachine/gamers", // TODO make this dynamic
+              "pathname": newPath + "/gamers",
               "query": {}
           },
           "children": "Gamers",

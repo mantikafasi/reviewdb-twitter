@@ -34,22 +34,23 @@ const WarningFlag = 0b00000010;
 export async function getReviews(id: string): Promise<Review[]> {
     var flags = 0;
     //if (!Settings.plugins.ReviewDB.showWarning) flags |= WarningFlag;
-    const req = await fetch(API_URL + `/api/reviewdb/users/${id}/reviews?flags=${flags}`);
+    const req = await fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews?flags=${flags}`);
 
-    const res = (req.status === 200) ? await req.json() as Response : { success: false, message: "An Error occured while fetching reviews. Please try again later.", reviews: [], updated: false };
-    if (!res.success) {
+    const res =  await req.json() as Response;
+    
+    if (req.status !== 200) {
         //showToast(res.message);
         return [
             {
                 id: 0,
                 comment: "An Error occured while fetching reviews. Please try again later.",
-                star: 0,
                 timestamp: 0,
                 sender: {
                     id: 0,
                     username: "Error",
-                    profilePhoto: "https://cdn.discordapp.com/attachments/1045394533384462377/1084900598035513447/646808599204593683.png?size=128",
-                    discordID: "0",
+                    displayName: "Error",
+                    avatarURL: "https://cdn.discordapp.com/attachments/1045394533384462377/1084900598035513447/646808599204593683.png?size=128",
+                    twitterId: "0",
                     badges: []
                 }
             }
@@ -67,7 +68,7 @@ export async function addReview(review: any): Promise<Response | null> {
         return null;
     }
 
-    return fetch(API_URL + `/api/reviewdb/users/${review.userid}/reviews`, {
+    return fetch(API_URL + `/api/reviewdb-twitter/users/${review.userid}/reviews`, {
         method: "PUT",
         body: JSON.stringify(review),
         headers: {
@@ -82,7 +83,7 @@ export async function addReview(review: any): Promise<Response | null> {
 }
 
 export function deleteReview(id: number): Promise<Response> {
-    return fetch(API_URL + `/api/reviewdb/users/${id}/reviews`, {
+    return fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews`, {
         method: "DELETE",
         headers: new Headers({
             "Content-Type": "application/json",
@@ -96,7 +97,7 @@ export function deleteReview(id: number): Promise<Response> {
 }
 
 export async function reportReview(id: number) {
-    const res = await fetch(API_URL + "/api/reviewdb/reports", {
+    const res = await fetch(API_URL + "/api/reviewdb-twitter/reports", {
         method: "PUT",
         headers: new Headers({
             "Content-Type": "application/json",
@@ -111,7 +112,7 @@ export async function reportReview(id: number) {
 }
 
 export function getCurrentUserInfo(token: string): Promise<ReviewDBUser> {
-    return fetch(API_URL + "/api/reviewdb/users", {
+    return fetch(API_URL + "/api/reviewdb-twitter/users", {
         body: JSON.stringify({ token }),
         method: "POST",
     })

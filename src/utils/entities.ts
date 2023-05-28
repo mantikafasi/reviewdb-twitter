@@ -60,16 +60,16 @@ export interface ReviewDBUser {
 
 export interface ReviewAuthor {
   id: number,
-  discordID: string,
+  twitterId: string,
   username: string,
-  profilePhoto: string,
+  avatarURL: string,
+  displayName: string,
   badges: Badge[];
 }
 
 export interface Review {
   comment: string,
   id: number,
-  star: number,
   sender: ReviewAuthor,
   timestamp: number;
   type?: ReviewType;
