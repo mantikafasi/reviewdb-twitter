@@ -9,8 +9,7 @@ const patcher = new Patcher();
 waitFor(
     m => m?.rs,
     m => {
-        const React = findByProps("useState");
-        window.React = React;
+        window.React = findByProps("useState");
 
         // F0 is React Router
         // EN is withRouter
