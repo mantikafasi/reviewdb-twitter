@@ -5,6 +5,7 @@ let ctx = await esbuild.context({
   bundle: true,
   jsxFactory: "React.createElement",
   jsxFragment: "React.Fragment",
+  logLevel: 'info',
   outfile: './build/contentScript.js',
 })
 

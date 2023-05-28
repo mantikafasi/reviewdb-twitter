@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "w": "pnpm watch",
-    "watch": "npx esbuild src/content.ts --bundle --outfile=./build/contentScript.js --format=cjs --jsx-factory=React.createElement --jsx-fragment=React.Fragment --watch",
+    "watch": "node ./esbuild.config.mjs",
     "build": "webpack --mode=production --config config/webpack.config.js",
     "pack": "node pack.js",
     "repack": "npm run build && npm run pack",
