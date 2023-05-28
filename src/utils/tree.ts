@@ -51,6 +51,5 @@ export function findInTree(
             if (res) return res;
         }
     }
-
     return null;
 }

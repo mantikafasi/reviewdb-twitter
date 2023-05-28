@@ -1,48 +1,49 @@
 import "./webpack/patchWebpack";
 
-import { awaitModule, find, findByProps, waitFor } from "./webpack/webpack";
+import {
+    awaitModule,
+    find,
+    findByCode,
+    findByCodeLazy,
+    findByProps,
+    waitFor,
+    filters,
+} from "./webpack/webpack";
+
 import { Patcher } from "jsposed";
 import ReviewsView from "./components/ReviewsView";
+import { findInReactTree } from "./utils/tree";
 const patcher = new Patcher();
+
+// declare react as global variable, later extension will use it to create components
+waitFor("useState", React => (window.React = React));
 
 // ik this is terrible once I get it to work I will replace with saner search
 waitFor(
     m => m?.rs,
     m => {
-        window.React = findByProps("useState");
-
+        console.log("mab", m);
         // F0 is React Router
         // EN is withRouter
         // AW is possibly <Route>
         patcher.after(m.F0.prototype, "render", ctx => {
-            ctx.result.props.children.props.children.props.children.props.children[1].props.children.props.children.props.children.forEach(
-                element => {
-                    if (Array.isArray(element)) {
-                        element.forEach(element2 => {
-                            if (element2?.key === "profile") {
-                                if (!element2.props.path.includes("with_replies|gamers")) {
-                                    element2.props.path = element2.props.path.replace(
-                                        "with_replies|",
-                                        "with_replies|gamers|"
-                                    );
-
-                                    // here I add my custom route to the array so whenever you call /reviews it will open twitter user's profile
-                                    console.log("added custom route", element2);
-                                }
-                            }
-                        });
-                    }
-                }
+            let res = findInReactTree(
+                ctx.result,
+                m =>
+                    m?.props?.path?.includes("with_replies|") &&
+                    !m.props.path.includes("with_replies|gamers") // to make sure it doesnt add multiple times
             );
-            console.log("route", ctx.result);
+            if (!res) return;
+            // here I add my custom route to the array so whenever you call /reviews it will open twitter user's profile component, later we patch the profile component to show reviews
+            res.props.path = res.props.path.replace("with_replies|", "with_replies|gamers|");
         });
 
         patcher.before(m.rs.prototype, "render", ctx => {
-            console.log("rspatch", ctx.thisObject, ctx.thisObject.props.prototype);
             if (ctx.thisObject.props.children.length === 12) {
+                // this is terrible way to check but fine for now imo
                 let kid = ctx.thisObject.props.children[0];
-                const twitterId = ctx.thisObject.props.children[0].props.children.props.userId; // this looks terrible but all elements in array has this so...
-                console.log(twitterId);
+                const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
+
                 ctx.thisObject.props.children.unshift(
                     React.cloneElement(
                         kid,
@@ -52,7 +53,7 @@ waitFor(
                                 path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
                             },
                         },
-                        React.createElement(ReviewsView, { twitterId: twitterId }, "Gamers")
+                        React.createElement(ReviewsView, { twitterId: userId }, "Gamers")
                     )
                 );
             }
@@ -63,43 +64,38 @@ waitFor(
 waitFor(
     m => m.toString().includes("getDerivedStateFromError"),
     m => {
-        patcher.instead(m.prototype, "componentDidCatch", ctx => {
-            console.error("deranged twitter error boundry", ctx.args[0], ctx.args[1]);
+        patcher.instead(m.prototype, "componentDidCatch", (ctx, arg1, arg2) => {
+            // normally twitters error boundary would hide the error from console and send it to their api
+            // this shows the error on console and prevents it from being sent to their api
+            console.error(arg1, arg2);
         });
     }
 );
 
-awaitModule("getState").then(R => {
-    const React = findByProps("useState");
+waitFor(
+    m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),
+    m => {
+        console.log("linkModule loaded", m);
 
-    waitFor(
-        m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),
-        m => {
-            console.log("linkModule loaded", m);
+        patcher.after(m.Z.prototype, "render", ctx => {
+            let kid = ctx.result.props.children[0];
+            const pathName = kid.props.to.pathname;
 
-            patcher.after(m.Z.prototype, "render", ctx => {
-                let kid = ctx.result.props.children[0];
-                const pathName = kid.props.to.pathname;
-
-                let newPath = "/" + pathName.substr(pathName.lastIndexOf("/") + 1);
-                ctx.result.props.children.push(
-                    React.cloneElement(kid, {
-                        key: "gamers",
-                        isActive: () => document.location.pathname.endsWith("/gamers"),
-                        viewType: "gamers",
-                        to: {
-                            pathname: newPath + "/gamers",
-                            query: {},
-                        },
-                        children: "Gamers",
-                        color: "primary",
-                        retainScrollPosition: true,
-                    })
-                );
-                console.log("linkModule", ctx.result);
-            });
-        }
-    );
-
-    console.log("content loaded");
-});
+            let newPath = "/" + pathName.substr(pathName.lastIndexOf("/") + 1);
+            ctx.result.props.children.push(
+                React.cloneElement(kid, {
+                    key: "gamers",
+                    isActive: () => document.location.pathname.endsWith("/gamers"),
+                    viewType: "gamers",
+                    to: {
+                        pathname: newPath + "/gamers",
+                        query: {},
+                    },
+                    children: "Gamers",
+                    color: "primary",
+                    retainScrollPosition: true,
+                })
+            );
+        });
+    }
+);
