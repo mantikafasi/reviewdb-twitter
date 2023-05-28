@@ -14,63 +14,63 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 export const enum UserType {
-  Banned = -1,
-  Normal = 0,
-  Admin = 1
+    Banned = -1,
+    Normal = 0,
+    Admin = 1,
 }
 
 export const enum ReviewType {
-  User = 0,
-  Server = 1,
-  Support = 2,
-  System = 3
+    User = 0,
+    Server = 1,
+    Support = 2,
+    System = 3,
 }
 
 export interface Badge {
-  name: string;
-  description: string;
-  icon: string;
-  redirectURL: string;
-  type: number;
+    name: string;
+    description: string;
+    icon: string;
+    redirectURL: string;
+    type: number;
 }
 
 export interface BanInfo {
-  id: string;
-  discordID: string;
-  reviewID: number;
-  reviewContent: string;
-  banEndDate: number;
+    id: string;
+    discordID: string;
+    reviewID: number;
+    reviewContent: string;
+    banEndDate: number;
 }
 
 export interface ReviewDBUser {
-  ID: number;
-  discordID: string;
-  username: string;
-  profilePhoto: string;
-  clientMod: string;
-  warningCount: number;
-  badges: any[];
-  banInfo: BanInfo | null;
-  lastReviewID: number;
-  type: UserType;
+    ID: number;
+    discordID: string;
+    username: string;
+    profilePhoto: string;
+    clientMod: string;
+    warningCount: number;
+    badges: any[];
+    banInfo: BanInfo | null;
+    lastReviewID: number;
+    type: UserType;
 }
 
 export interface ReviewAuthor {
-  id: number,
-  twitterId: string,
-  username: string,
-  avatarURL: string,
-  displayName: string,
-  badges: Badge[];
+    id: number;
+    twitterId: string;
+    username: string;
+    avatarURL: string;
+    displayName: string;
+    badges: Badge[];
 }
 
 export interface Review {
-  comment: string,
-  id: number,
-  sender: ReviewAuthor,
-  timestamp: number;
-  type?: ReviewType;
+    comment: string;
+    id: number;
+    sender: ReviewAuthor;
+    timestamp: number;
+    type?: ReviewType;
 }

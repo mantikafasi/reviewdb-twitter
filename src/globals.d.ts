@@ -1,5 +1,5 @@
 declare global {
-  export var React: typeof import("react");
+    export var React: typeof import("react");
 }
 
-export {}
+export {};

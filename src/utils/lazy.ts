@@ -14,11 +14,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 export function makeLazy<T>(factory: () => T): () => T {
-  let cache: T;
-  return () => cache ?? (cache = factory());
+    let cache: T;
+    return () => cache ?? (cache = factory());
 }
 
 // Proxies demand that these properties be unmodified, so proxyLazy
@@ -31,41 +31,40 @@ const GET_KEY = Symbol.for("vencord.lazy.get");
 const CACHED_KEY = Symbol.for("vencord.lazy.cached");
 
 for (const method of [
-  "apply",
-  "construct",
-  "defineProperty",
-  "deleteProperty",
-  "get",
-  "getOwnPropertyDescriptor",
-  "getPrototypeOf",
-  "has",
-  "isExtensible",
-  "ownKeys",
-  "preventExtensions",
-  "set",
-  "setPrototypeOf"
+    "apply",
+    "construct",
+    "defineProperty",
+    "deleteProperty",
+    "get",
+    "getOwnPropertyDescriptor",
+    "getPrototypeOf",
+    "has",
+    "isExtensible",
+    "ownKeys",
+    "preventExtensions",
+    "set",
+    "setPrototypeOf",
 ]) {
-  handler[method] =
-    (target: any, ...args: any[]) => Reflect[method](target[GET_KEY](), ...args);
+    handler[method] = (target: any, ...args: any[]) => Reflect[method](target[GET_KEY](), ...args);
 }
 
 handler.ownKeys = target => {
-  const v = target[GET_KEY]();
-  const keys = Reflect.ownKeys(v);
-  for (const key of unconfigurable) {
-    if (!keys.includes(key)) keys.push(key);
-  }
-  return keys;
+    const v = target[GET_KEY]();
+    const keys = Reflect.ownKeys(v);
+    for (const key of unconfigurable) {
+        if (!keys.includes(key)) keys.push(key);
+    }
+    return keys;
 };
 
 handler.getOwnPropertyDescriptor = (target, p) => {
-  if (typeof p === "string" && unconfigurable.includes(p))
-    return Reflect.getOwnPropertyDescriptor(target, p);
+    if (typeof p === "string" && unconfigurable.includes(p))
+        return Reflect.getOwnPropertyDescriptor(target, p);
 
-  const descriptor = Reflect.getOwnPropertyDescriptor(target[GET_KEY](), p);
+    const descriptor = Reflect.getOwnPropertyDescriptor(target[GET_KEY](), p);
 
-  if (descriptor) Object.defineProperty(target, p, descriptor);
-  return descriptor;
+    if (descriptor) Object.defineProperty(target, p, descriptor);
+    return descriptor;
 };
 
 /**
@@ -78,10 +77,13 @@ handler.getOwnPropertyDescriptor = (target, p) => {
  * @example const mod = proxyLazy(() => findByProps("blah")); console.log(mod.blah);
  */
 export function proxyLazy<T>(factory: () => T): T {
-  const proxyDummy: { (): void;[CACHED_KEY]?: T;[GET_KEY](): T; } = Object.assign(function () { }, {
-    [CACHED_KEY]: void 0,
-    [GET_KEY]: () => proxyDummy[CACHED_KEY] ??= factory(),
-  });
+    const proxyDummy: { (): void; [CACHED_KEY]?: T; [GET_KEY](): T } = Object.assign(
+        function () {},
+        {
+            [CACHED_KEY]: void 0,
+            [GET_KEY]: () => (proxyDummy[CACHED_KEY] ??= factory()),
+        }
+    );
 
-  return new Proxy(proxyDummy, handler) as any;
+    return new Proxy(proxyDummy, handler) as any;
 }

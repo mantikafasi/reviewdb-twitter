@@ -14,16 +14,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
-import {Review,ReviewDBUser} from "./entities";
+import { Review, ReviewDBUser } from "./entities";
 
 const API_URL = "https://manti.vendicated.dev";
 
 const getToken = () => "";
 
 interface Response {
-    success: boolean,
+    success: boolean;
     message: string;
     reviews: Review[];
     updated: boolean;
@@ -36,8 +36,8 @@ export async function getReviews(id: string): Promise<Review[]> {
     //if (!Settings.plugins.ReviewDB.showWarning) flags |= WarningFlag;
     const req = await fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews?flags=${flags}`);
 
-    const res =  await req.json() as Response;
-    
+    const res = (await req.json()) as Response;
+
     if (req.status !== 200) {
         //showToast(res.message);
         return [
@@ -49,11 +49,12 @@ export async function getReviews(id: string): Promise<Review[]> {
                     id: 0,
                     username: "Error",
                     displayName: "Error",
-                    avatarURL: "https://cdn.discordapp.com/attachments/1045394533384462377/1084900598035513447/646808599204593683.png?size=128",
+                    avatarURL:
+                        "https://cdn.discordapp.com/attachments/1045394533384462377/1084900598035513447/646808599204593683.png?size=128",
                     twitterId: "0",
-                    badges: []
-                }
-            }
+                    badges: [],
+                },
+            },
         ];
     }
     return res.reviews;
@@ -73,7 +74,7 @@ export async function addReview(review: any): Promise<Response | null> {
         body: JSON.stringify(review),
         headers: {
             "Content-Type": "application/json",
-        }
+        },
     })
         .then(r => r.json())
         .then(res => {
@@ -91,13 +92,13 @@ export function deleteReview(id: number): Promise<Response> {
         }),
         body: JSON.stringify({
             token: getToken(),
-            reviewid: id
-        })
+            reviewid: id,
+        }),
     }).then(r => r.json());
 }
 
 export async function reportReview(id: number) {
-    const res = await fetch(API_URL + "/api/reviewdb-twitter/reports", {
+    const res = (await fetch(API_URL + "/api/reviewdb-twitter/reports", {
         method: "PUT",
         headers: new Headers({
             "Content-Type": "application/json",
@@ -105,9 +106,9 @@ export async function reportReview(id: number) {
         }),
         body: JSON.stringify({
             reviewid: id,
-            token: getToken()
-        })
-    }).then(r => r.json()) as Response;
+            token: getToken(),
+        }),
+    }).then(r => r.json())) as Response;
     //showToast(await res.message);
 }
 
@@ -115,6 +116,5 @@ export function getCurrentUserInfo(token: string): Promise<ReviewDBUser> {
     return fetch(API_URL + "/api/reviewdb-twitter/users", {
         body: JSON.stringify({ token }),
         method: "POST",
-    })
-        .then(r => r.json());
+    }).then(r => r.json());
 }
