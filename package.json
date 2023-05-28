@@ -4,29 +4,21 @@
   "description": "My Chrome Extension",
   "private": true,
   "scripts": {
-    "w": "pnpm watch",
     "build": "node esbuild.config.mjs",
+    "w": "pnpm watch",
     "watch": "pnpm build --watch",
     "pack": "node pack.js",
     "repack": "npm run build && npm run pack",
     "format": "prettier --write --ignore-unknown \"{config,public,src}/**/*.{html,css,js,ts,json}\""
   },
   "devDependencies": {
+    "@types/react": "^18.2.7",
     "adm-zip": "^0.5.10",
-    "copy-webpack-plugin": "^10.2.4",
-    "css-loader": "^6.7.4",
-    "file-loader": "^6.2.0",
-    "mini-css-extract-plugin": "^2.7.6",
     "prettier": "^2.8.8",
-    "ts-loader": "^9.4.3",
     "typescript": "^5.0.4",
-    "webpack": "^5.84.1",
-    "webpack-cli": "^4.10.0",
-    "webpack-merge": "^5.9.0"
+    "esbuild": "0.17.19"
   },
   "dependencies": {
-    "@types/react": "^18.2.7",
-    "esbuild": "0.17.19",
     "jsposed": "^1.0.4"
   }
 }
