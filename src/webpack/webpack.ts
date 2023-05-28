@@ -58,7 +58,7 @@ export const filters = {
         (...code: string[]): FilterFn =>
         m => {
             if (typeof m !== "function") return false;
-            const s = Function.prototype.toString.call(m);
+            const s = Function.prototype.toString.call(m?.prototype?.render || m);
             for (const c of code) {
                 if (!s.includes(c)) return false;
             }
