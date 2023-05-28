@@ -1,13 +1,7 @@
 import "./webpack/patchWebpack";
 
 import {
-    awaitModule,
-    find,
-    findByCode,
-    findByCodeLazy,
-    findByProps,
     waitFor,
-    filters,
 } from "./webpack/webpack";
 
 import { Patcher } from "jsposed";
@@ -62,9 +56,9 @@ waitFor(
 );
 
 waitFor(
-    m => m.toString().includes("getDerivedStateFromError"),
+    m => m?.toString().includes("getDerivedStateFromError"),
     m => {
-        patcher.instead(m.prototype, "componentDidCatch", (ctx, arg1, arg2) => {
+        patcher.instead(m.prototype, "componentDidCatch", (_, arg1, arg2) => {
             // normally twitters error boundary would hide the error from console and send it to their api
             // this shows the error on console and prevents it from being sent to their api
             console.error(arg1, arg2);
@@ -75,7 +69,6 @@ waitFor(
 waitFor(
     m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),
     m => {
-        console.log("linkModule loaded", m);
 
         patcher.after(m.Z.prototype, "render", ctx => {
             let kid = ctx.result.props.children[0];
