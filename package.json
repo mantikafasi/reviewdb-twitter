@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "w": "pnpm watch",
-    "watch": "node ./esbuild.config.mjs",
-    "build": "webpack --mode=production --config config/webpack.config.js",
+    "build": "node esbuild.config.mjs",
+    "watch": "pnpm build --watch",
     "pack": "node pack.js",
     "repack": "npm run build && npm run pack",
     "format": "prettier --write --ignore-unknown \"{config,public,src}/**/*.{html,css,js,ts,json}\""
