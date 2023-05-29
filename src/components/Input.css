@@ -15,11 +15,15 @@
     font-size: 20px;
     font-weight: 500;
     margin-left: 8px;
-    color: #cfcfcf;
+    color: gray;
     resize: none;
     overflow: hidden;
     background-color: transparent;
     border-bottom: 1px white;
+}
+
+.input[contenteditable="true"] {
+    color: #cfcfcf;
 }
 
 .input[contenteditable]:empty::before {

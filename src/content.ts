@@ -1,13 +1,27 @@
 import "./webpack/patchWebpack";
 
-import {
-    waitFor,
-} from "./webpack/webpack";
+import { waitFor } from "./webpack/webpack";
 
 import { Patcher } from "jsposed";
 import ReviewsView from "./components/ReviewsView";
 import { findInReactTree } from "./utils/tree";
+import { EXTENSION_ID } from "./utils/constants";
 const patcher = new Patcher();
+
+const browser = chrome;
+
+window.Extension = {
+    getToken(): Promise<string> {
+        return new Promise(resolve => {
+            browser.runtime.sendMessage(EXTENSION_ID, { type: "getToken" }, resolve);
+        });
+    },
+    setToken(token: string): Promise<string> {
+        return new Promise(resolve => {
+            browser.runtime.sendMessage(EXTENSION_ID, { type: "setToken", token }, resolve);
+        });
+    },
+};
 
 // declare react as global variable, later extension will use it to create components
 waitFor("useState", React => (window.React = React));
@@ -69,7 +83,6 @@ waitFor(
 waitFor(
     m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),
     m => {
-
         patcher.after(m.Z.prototype, "render", ctx => {
             let kid = ctx.result.props.children[0];
             const pathName = kid.props.to.pathname;
