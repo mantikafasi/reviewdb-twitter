@@ -49,8 +49,9 @@ export interface ReviewDBUser {
     ID: number;
     discordID: string;
     username: string;
-    profilePhoto: string;
+    avatar_url: string;
     clientMod: string;
+    token: string;
     warningCount: number;
     badges: any[];
     banInfo: BanInfo | null;

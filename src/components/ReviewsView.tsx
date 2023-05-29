@@ -5,15 +5,18 @@ import ReviewComponent from "./ReviewComponent";
 
 export default function ReviewsView(props: { twitterId: string; }) {
     const [reviews, setReviews] = React.useState<Review[]>([]);
-
+    const [count, setCount] = React.useState<number>(0);
+    function refetch() {
+        setCount(count + 1);
+    }
     React.useEffect(() => {
         getReviews(props.twitterId).then(reviews => setReviews(reviews));
-    }, ["userid"]);
+    }, [props.twitterId,count]);
     return (
         <div style={{
             marginBottom: "100px"
         }}>
-            <Input />
+            <Input profileId={props.twitterId} refetch={refetch}/>
             {reviews &&
                 reviews.map(review => <ReviewComponent review={review} />)
             }

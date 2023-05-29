@@ -6,21 +6,32 @@ import { Patcher } from "jsposed";
 import ReviewsView from "./components/ReviewsView";
 import { findInReactTree } from "./utils/tree";
 import { EXTENSION_ID } from "./utils/constants";
+import { ReviewDBUser } from "./utils/entities";
 const patcher = new Patcher();
 
 const browser = chrome;
 
 window.Extension = {
-    getToken(): Promise<string> {
+    getToken() {
         return new Promise(resolve => {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "getToken" }, resolve);
         });
     },
-    setToken(token: string): Promise<string> {
+    setToken(token: string) {
         return new Promise(resolve => {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "setToken", token }, resolve);
         });
     },
+    authorize() {
+        return new Promise(resolve => {
+            browser.runtime.sendMessage(EXTENSION_ID, { type: "authorize" }, resolve);
+        });
+    },
+    getUser() {
+        return new Promise(resolve => {
+            browser.runtime.sendMessage(EXTENSION_ID, { type: "getUser" }, resolve);
+        });
+    }
 };
 
 // declare react as global variable, later extension will use it to create components
@@ -30,7 +41,6 @@ waitFor("useState", React => (window.React = React));
 waitFor(
     m => m?.rs,
     m => {
-        console.log("mab", m);
         // F0 is React Router
         // EN is withRouter
         // AW is possibly <Route>
@@ -72,10 +82,10 @@ waitFor(
 waitFor(
     m => m?.toString().includes("getDerivedStateFromError"),
     m => {
-        patcher.instead(m.prototype, "componentDidCatch", (_, arg1, arg2) => {
+        patcher.instead(m.prototype, "componentDidCatch", (ctx) => {
             // normally twitters error boundary would hide the error from console and send it to their api
             // this shows the error on console and prevents it from being sent to their api
-            console.error(arg1, arg2);
+            console.error("reviewdb or twitter shitted itself",ctx.args[0], ctx.args[1]);
         });
     }
 );

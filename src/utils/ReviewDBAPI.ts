@@ -60,26 +60,19 @@ export async function getReviews(id: string): Promise<Review[]> {
     return res.reviews;
 }
 
-export async function addReview(review: any): Promise<Response | null> {
-    review.token = getToken();
-
-    if (!review.token) {
-        //showToast("Please authorize to add a review.");
-        //authorize();
-        return null;
-    }
-
-    return fetch(API_URL + `/api/reviewdb-twitter/users/${review.userid}/reviews`, {
+export async function addReview(reviewData: any, token: string): Promise<string> {
+    return fetch(API_URL + `/api/reviewdb-twitter/users/${reviewData.profileId}/reviews`, {
         method: "PUT",
-        body: JSON.stringify(review),
+        body: JSON.stringify({ comment: reviewData.comment }),
         headers: {
+            "Authorization": token,
             "Content-Type": "application/json",
         },
     })
-        .then(r => r.json())
+        .then(r => r.text())
         .then(res => {
             //showToast(res.message);
-            return res ?? null;
+            return res ?? "An Error occured while adding review";
         });
 }
 

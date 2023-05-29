@@ -1,21 +1,46 @@
+import { addReview } from "../utils/ReviewDBAPI";
+import { ReviewDBUser } from "../utils/entities";
 import "./Input.css";
 import "./Reviews.css";
-type Props = {}
+type Props = {
+    refetch: () => void;
+    profileId: string;
+}
 
-export default function Input({ }: Props) {
+export default function Input({ refetch, profileId }: Props) {
     const [text, setText] = React.useState<string>("");
-    const [token, setToken] = React.useState<string>("");
-
-    Extension.getToken().then(({ token }) => {
-        console.log(token);
-        token && setToken(token);
+    const [user, setUser] = React.useState<ReviewDBUser | null>(null);
+    let inputRef = React.useRef<HTMLSpanElement>(null);
+    const isAuthorized = () => user && user.token.length !== 0;
+    Extension.getUser().then((user) => {
+        user && setUser(user);
     });
 
-    function handleClick(s: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        if (token.length === 0) {
-            window.open("https://twitter.com/i/oauth2/authorize?response_type=code&client_id=SFVDakw2VVg3V2VrTVlNVkNTS0Y6MTpjaQ&redirect_uri=https://manti.vendicated.dev/api/reviewdb-twitter/auth&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain");
-            s.target.textContent = "Please Refresh the page after authorization";
-
+    function handleClick(s: any) { // any because React.MouseEvent<HTMLButtonElement, MouseEvent> raises error
+        if (!isAuthorized()) {
+            open("https://twitter.com/i/oauth2/authorize?response_type=code&client_id=SFVDakw2VVg3V2VrTVlNVkNTS0Y6MTpjaQ&redirect_uri=https://manti.vendicated.dev/api/reviewdb-twitter/auth&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain");
+            //open("https://manti.vendicated.dev/api/reviewdb-twitter/morb")
+            Extension.authorize().then((res) => {
+                if (res?.user?.token) {
+                    setUser(res.user);
+                } else {
+                    s.target.textContent = "An error occured while authorizing please try again later";
+                }
+                s.target.textContent = "Review";
+            });
+            s.target.textContent = "Authorizing...";
+        } else {
+            addReview(
+                {
+                    comment: text,
+                    profileId: profileId,
+                }, user!.token
+            ).then((res) => {
+                console.log(res);
+                setText("");
+                inputRef?.current && (inputRef.current.innerHTML = "") ;
+                refetch();
+            });
         }
     }
 
@@ -23,17 +48,17 @@ export default function Input({ }: Props) {
         <div className="wrapper">
             <div className="input-box">
                 <div className="review-area">
-                    <img src={"https://pbs.twimg.com/profile_images/1082374462559977481/v722bg9d_normal.jpg"} alt="" className="avator" />
-                    <span className="input" {
+                    <img src={user ? user.avatar_url : "https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png"} alt="" className="avator" />
+                    <span className="input" ref={inputRef} {
                         ...{
-                            contentEditable: token.length !== 0
+                            contentEditable: isAuthorized(),
                         }
                     } onKeyUp={
-                        (e) => {
+                        (e:any /* whoever wrote typings for this should explode */) => {
                             setText(e.target.textContent);
                         }
                     } >{
-                            token.length !== 0 ? "" : "Please authorize to send a review"
+                            isAuthorized() ? "" : "Please authorize to send a review"
                         }</span>
                 </div>
             </div>
@@ -46,10 +71,10 @@ export default function Input({ }: Props) {
                 <button onClick={handleClick}
                     {
                     ...{
-                        disabled: text.length === 0 && (token.length !== 0)
+                        disabled: text.length === 0 && isAuthorized(),
                     }
                     }>{
-                        token.length !== 0 ? "Review" : "Authorize with twitter"
+                        isAuthorized() ? "Review" : "Authorize with twitter"
                     }</button>
             </div>
         </div>
