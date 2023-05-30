@@ -63,7 +63,6 @@ waitFor(
             if (location) return;
             if (!children.some(c => c?.props?.path?.endsWith("/media"))) return;
 
-            // this is terrible way to check but fine for now imo
             let kid = ctx.thisObject.props.children[0];
             const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
 
