@@ -14,9 +14,10 @@
     "devDependencies": {
         "@types/react": "^18.2.7",
         "adm-zip": "^0.5.10",
+        "esbuild": "0.17.19",
+        "esbuild-copy-static-files": "^0.1.0",
         "prettier": "^2.8.8",
-        "typescript": "^5.0.4",
-        "esbuild": "0.17.19"
+        "typescript": "^5.0.4"
     },
     "dependencies": {
         "jsposed": "^1.0.4"
