@@ -10,6 +10,7 @@ import ReviewsView from "./components/ReviewsView";
 import { findInReactTree } from "./utils/tree";
 import { EXTENSION_ID } from "./utils/constants";
 import { ReviewDBUser } from "./utils/entities";
+import { createContext } from "react";
 
 export const patcher = new Patcher();
 
@@ -54,29 +55,31 @@ waitFor("computeRootMatch", ReactRouter => {
     });
 });
 
-// ik this is terrible once I get it to work I will replace with saner search
 waitFor(
     m => m.prototype?.render?.toString().includes("props.from"),
     Route => {
         patcher.before(Route.prototype, "render", ctx => {
-            if (ctx.thisObject.props.children.length === 12) {
-                // this is terrible way to check but fine for now imo
-                let kid = ctx.thisObject.props.children[0];
-                const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
+            const { location, children } = ctx.thisObject.props;
 
-                ctx.thisObject.props.children.unshift(
-                    React.cloneElement(
-                        kid,
-                        {
+            if (location) return;
+            if (!children.some(c => c?.props?.path?.endsWith("/media"))) return;
+
+            // this is terrible way to check but fine for now imo
+            let kid = ctx.thisObject.props.children[0];
+            const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
+
+            ctx.thisObject.props.children.unshift(
+                React.cloneElement(
+                    kid,
+                    {
+                        path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
+                        props: {
                             path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
-                            props: {
-                                path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
-                            },
                         },
-                        React.createElement(ReviewsView, { twitterId: userId }, "Gamers")
-                    )
-                );
-            }
+                    },
+                    React.createElement(ReviewsView, { twitterId: userId }, "Gamers")
+                )
+            );
         });
     }
 );
@@ -93,6 +96,8 @@ waitFor(
     m => m.prototype?._renderLinks,
     Links => {
         patcher.after(Links.prototype, "render", ctx => {
+            if (ctx.result?.key !== "Tweets-Replies-Media-Likes") return;
+
             let kid = ctx.result.props.children[0];
             const pathName = kid.props.to.pathname;
 
