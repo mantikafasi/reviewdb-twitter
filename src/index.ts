@@ -40,12 +40,8 @@ export const Auth = {
 // declare react as global variable, later extension will use it to create components
 waitFor("useState", React => (window.React = React));
 
-// ik this is terrible once I get it to work I will replace with saner search
-waitFor("rs", m => {
-    // F0 is React Router
-    // EN is withRouter
-    // AW is possibly <Route>
-    patcher.after(m.F0.prototype, "render", ctx => {
+waitFor("computeRootMatch", ReactRouter => {
+    patcher.after(ReactRouter.prototype, "render", ctx => {
         let res = findInReactTree(
             ctx.result,
             m =>
@@ -56,28 +52,34 @@ waitFor("rs", m => {
         // here I add my custom route to the array so whenever you call /reviews it will open twitter user's profile component, later we patch the profile component to show reviews
         res.props.path = res.props.path.replace("with_replies|", "with_replies|gamers|");
     });
-
-    patcher.before(m.rs.prototype, "render", ctx => {
-        if (ctx.thisObject.props.children.length === 12) {
-            // this is terrible way to check but fine for now imo
-            let kid = ctx.thisObject.props.children[0];
-            const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
-
-            ctx.thisObject.props.children.unshift(
-                React.cloneElement(
-                    kid,
-                    {
-                        path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
-                        props: {
-                            path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
-                        },
-                    },
-                    React.createElement(ReviewsView, { twitterId: userId }, "Gamers")
-                )
-            );
-        }
-    });
 });
+
+// ik this is terrible once I get it to work I will replace with saner search
+waitFor(
+    m => m.prototype?.render?.toString().includes("props.from"),
+    Route => {
+        patcher.before(Route.prototype, "render", ctx => {
+            if (ctx.thisObject.props.children.length === 12) {
+                // this is terrible way to check but fine for now imo
+                let kid = ctx.thisObject.props.children[0];
+                const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
+
+                ctx.thisObject.props.children.unshift(
+                    React.cloneElement(
+                        kid,
+                        {
+                            path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
+                            props: {
+                                path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
+                            },
+                        },
+                        React.createElement(ReviewsView, { twitterId: userId }, "Gamers")
+                    )
+                );
+            }
+        });
+    }
+);
 
 waitFor("getDerivedStateFromError", m => {
     patcher.instead(m.prototype, "componentDidCatch", ctx => {
@@ -88,9 +90,9 @@ waitFor("getDerivedStateFromError", m => {
 });
 
 waitFor(
-    m => m?.Z?.prototype?.render?.toString().includes("childrenStyle:w.flexGrow"),
-    m => {
-        patcher.after(m.Z.prototype, "render", ctx => {
+    m => m.prototype?._renderLinks,
+    Links => {
+        patcher.after(Links.prototype, "render", ctx => {
             let kid = ctx.result.props.children[0];
             const pathName = kid.props.to.pathname;
 
