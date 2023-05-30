@@ -9,7 +9,7 @@ const ctx = await esbuild.context({
     jsxFactory: "React.createElement",
     jsxFragment: "React.Fragment",
     logLevel: "info",
-    outfile: "./build/contentScript.js",
+    outfile: "./build/bundle.js",
 
     plugins: [
         copyStaticFiles({
