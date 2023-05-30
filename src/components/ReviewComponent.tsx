@@ -35,11 +35,13 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
 
     return (
         <div className="review-header">
-            <img src={props.review.sender.avatarURL} alt="" className="avator" />
+            <a target='_blank' href={'https://twitter.com/' + props.review.sender.username}>
+                <img src={props.review.sender.avatarURL} alt="" className="avator" />
+            </a>
             <div className="review-header-info">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                     <div>
-                        {props.review.sender.displayName}  <span>{props.review.sender.username}</span><span> {new Date(props.review.timestamp * 1000).toLocaleString()}
+                        <a target="_blank" href={'https://twitter.com/' + props.review.sender.username}>{props.review.sender.displayName}</a>  <span>{props.review.sender.username}</span><span> {new Date(props.review.timestamp * 1000).toLocaleString()}
                         </span>
                     </div>
                     <Menu options={

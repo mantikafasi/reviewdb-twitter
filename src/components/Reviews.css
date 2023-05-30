@@ -47,3 +47,21 @@
         margin-bottom: 30px;
     }
 }
+
+a {
+    text-decoration: none;
+    color:unset;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.avator:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.avator:active {
+    translate: 0 1px;
+}

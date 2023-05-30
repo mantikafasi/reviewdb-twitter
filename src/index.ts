@@ -104,7 +104,7 @@ waitFor(
                         pathname: newPath + "/gamers",
                         query: {},
                     },
-                    children: "Gamers",
+                    children: "Reviews",
                     color: "primary",
                     retainScrollPosition: true,
                 })
