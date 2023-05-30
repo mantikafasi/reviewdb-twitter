@@ -16,11 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { Auth } from "..";
 import { Review, ReviewDBUser } from "./entities";
 
 const API_URL = "https://manti.vendicated.dev";
-
-const getToken = () => "";
 
 interface Response {
     success: boolean;
@@ -32,13 +31,13 @@ interface Response {
 const WarningFlag = 0b00000010;
 
 export function getUser(): Promise<ReviewDBUser> {
-    return ReviewDB.Auth.getUser();
+    return Auth.getUser();
 }
 
 export async function getReviews(id: string): Promise<Review[]> {
     var flags = 0;
     //if (!Settings.plugins.ReviewDB.showWarning) flags |= WarningFlag;
-    const res = await ReviewDB.Auth.fetch(
+    const res = await Auth.fetch(
         API_URL + `/api/reviewdb-twitter/users/${id}/reviews?flags=${flags}`,
         "json"
     );
@@ -69,7 +68,7 @@ export async function addReview(reviewData: any) {
     let user = await getUser();
     if (!user) return;
 
-    return ReviewDB.Auth.fetch(
+    return Auth.fetch(
         API_URL + `/api/reviewdb-twitter/users/${reviewData.profileId}/reviews`,
         "text",
         {
@@ -86,7 +85,7 @@ export async function addReview(reviewData: any) {
 export async function deleteReview(id: number) {
     let user = await getUser();
 
-    return ReviewDB.Auth.fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews`, "text", {
+    return Auth.fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews`, "text", {
         method: "DELETE",
         headers: {
             Authorization: user.token,
@@ -102,7 +101,7 @@ export async function deleteReview(id: number) {
 export async function reportReview(id: number) {
     let user = await getUser();
 
-    return ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/reports", "text", {
+    return Auth.fetch(API_URL + "/api/reviewdb-twitter/reports", "text", {
         method: "PUT",
         headers: {
             Authorization: user.token,
@@ -119,7 +118,7 @@ export async function getCurrentUserInfo(token: string): Promise<ReviewDBUser | 
     let user = await getUser();
     if (!user) return;
 
-    return ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/users", "json", {
+    return Auth.fetch(API_URL + "/api/reviewdb-twitter/users", "json", {
         body: JSON.stringify({ token }),
         method: "POST",
     }).then(r => r.json);
