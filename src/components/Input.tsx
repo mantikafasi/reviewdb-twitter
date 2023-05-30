@@ -12,9 +12,12 @@ export default function Input({ refetch, profileId }: Props) {
     const [user, setUser] = React.useState<ReviewDBUser | null>(null);
     let inputRef = React.useRef<HTMLSpanElement>(null);
     const isAuthorized = () => !!user?.token;
-    ReviewDB.Auth.getUser().then((user) => {
-        user && setUser(user);
-    });
+
+    React.useEffect(() => {
+        ReviewDB.Auth.getUser().then((user) => {
+            user && setUser(user);
+        });
+    }, []);
 
     function handleClick(s: any) { // any because React.MouseEvent<HTMLButtonElement, MouseEvent> raises error
         if (!isAuthorized()) {
