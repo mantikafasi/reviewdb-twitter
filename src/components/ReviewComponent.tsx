@@ -3,13 +3,14 @@ import { Review, ReviewDBUser } from '../utils/entities';
 import Menu from './Menu';
 import './Reviews.css';
 
-export default function ReviewComponent(props: { review: Review; user: ReviewDBUser | null }) {
+export default function ReviewComponent(props: { review: Review; user: ReviewDBUser | null,refetch: () => void; }) {
     const { toast } = require("react-toastify") as typeof import("react-toastify");
 
     const deleteRev = () => {
         deleteReview(props.review.id).then(res => {
             if (res.ok) {
                 toast.success(res.text);
+                props.refetch();
             } else {
                 toast.error(res.text ?? "An error occured while deleting review");
             }
@@ -48,12 +49,12 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
                         [
                             {
                                 text: "Report Review",
-                                onClick: () => reportRev,
+                                onClick: reportRev,
                                 iconType: "report",
                             },
                             {
                                 text: "Delete Review",
-                                onClick: () => deleteRev,
+                                onClick: deleteRev,
                                 iconType: "delete",
                             },
                         ]

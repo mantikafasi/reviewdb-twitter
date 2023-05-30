@@ -46,7 +46,7 @@ export default function ReviewsView(props: { twitterId: string; }) {
 
             <Input profileId={props.twitterId} refetch={refetch} auth={authorize} user={user} />
             {reviews &&
-                reviews.map(review => <ReviewComponent review={review} user={user} />)
+                reviews.map(review => <ReviewComponent review={review} user={user} refetch={refetch} />)
             }
         </div>
     );

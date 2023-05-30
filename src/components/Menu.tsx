@@ -1,6 +1,6 @@
 import './Menu.css'
 
-export default function Menu(props : {options: {text: string, onClick: () => void, iconType: 'delete' | 'report'}[]}) {
+export default function Menu(props: { options: { text: string, onClick: () => void, iconType: 'delete' | 'report' }[] }) {
     const [showMenu, setShowMenu] = React.useState<boolean>(false);
 
     return (
@@ -12,7 +12,14 @@ export default function Menu(props : {options: {text: string, onClick: () => voi
                 showMenu && (
                     <div className="dropdown-content">
                         {
-                            props.options.map(option => <Option text={option.text} iconComponent={option.iconType === 'delete' ? <DangerButton /> : <ReportButton />} onClick={option.onClick} />)
+                            props.options.map(option =>
+                                <Option text={option.text}
+                                    iconComponent={option.iconType === 'delete' ? <DangerButton /> : <ReportButton />}
+                                    onClick={() => {
+                                        option.onClick();
+                                        setShowMenu(false);
+                                    }}
+                                />)
                         }
                     </div>
                 )

@@ -83,18 +83,17 @@ export async function addReview(reviewData: any) {
     );
 }
 
-export async function deleteReview(id: number){
+export async function deleteReview(id: number) {
     let user = await getUser();
 
     return ReviewDB.Auth.fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews`, "text", {
         method: "DELETE",
-        headers: new Headers({
-            "Authorization": user.token,
+        headers: {
+            Authorization: user.token,
             "Content-Type": "application/json",
             Accept: "application/json",
-        }),
+        },
         body: JSON.stringify({
-            token: getToken(),
             reviewid: id,
         }),
     });
@@ -105,14 +104,13 @@ export async function reportReview(id: number) {
 
     return ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/reports", "text", {
         method: "PUT",
-        headers: new Headers({
-            "Authorization": user.token,
+        headers: {
+            Authorization: user.token,
             "Content-Type": "application/json",
             Accept: "application/json",
-        }),
+        },
         body: JSON.stringify({
             reviewid: id,
-            token: getToken(),
         }),
     });
 }
