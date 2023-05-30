@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
 }
-.wrapper{
-  width: 100%;
-  padding: 25px 25px 15px 25px;
+.wrapper {
+    width: 100%;
+    padding: 25px 25px 15px 25px;
 }
 
 .input {
@@ -31,7 +31,7 @@
     color: gray;
 }
 
-.input:hover{
+.input:hover {
     cursor: text;
 }
 
@@ -45,36 +45,36 @@
     border-bottom: 1px solid #aab8c2;
 }
 
-.review-area::-webkit-scrollbar{
-  width: 0px;
+.review-area::-webkit-scrollbar {
+    width: 0px;
 }
 
-.bottom{
-  display: flex;
-  margin-top: 13px;
-  align-items: center;
-  justify-content: end;
+.bottom {
+    display: flex;
+    margin-top: 13px;
+    align-items: center;
+    justify-content: end;
 }
 
-.bottom .counter{
-  color: gray;
-  font-weight: 500;
-  margin-right: 15px;
-  padding-right: 15px;
-  border-right: 1px solid #aab8c2;
+.bottom .counter {
+    color: gray;
+    font-weight: 500;
+    margin-right: 15px;
+    padding-right: 15px;
+    border-right: 1px solid #aab8c2;
 }
 
-.bottom button{
-  padding: 9px 18px;
-  border: none;
-  outline: none;
-  border-radius: 50px;
-  font-size: 16px;
-  font-weight: 700;
-  background: #1da1f2;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.bottom button {
+    padding: 9px 18px;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    background: #1da1f2;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
 }
 
 button:disabled {
@@ -82,6 +82,6 @@ button:disabled {
     pointer-events: none;
 }
 
-.bottom button:hover{
-  background: #0d8bd9;
+.bottom button:hover {
+    background: #0d8bd9;
 }

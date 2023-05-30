@@ -65,7 +65,7 @@ export async function addReview(reviewData: any, token: string): Promise<string>
         method: "PUT",
         body: JSON.stringify({ comment: reviewData.comment }),
         headers: {
-            "Authorization": token,
+            Authorization: token,
             "Content-Type": "application/json",
         },
     })
