@@ -46,11 +46,11 @@ waitFor("computeRootMatch", ReactRouter => {
             ctx.result,
             m =>
                 m?.props?.path?.includes("with_replies|") &&
-                !m.props.path.includes("with_replies|gamers") // to make sure it doesnt add multiple times
+                !m.props.path.includes("with_replies|reviews") // to make sure it doesnt add multiple times
         );
         if (!res) return;
         // here I add my custom route to the array so whenever you call /reviews it will open twitter user's profile component, later we patch the profile component to show reviews
-        res.props.path = res.props.path.replace("with_replies|", "with_replies|gamers|");
+        res.props.path = res.props.path.replace("with_replies|", "with_replies|reviews|");
     });
 });
 
@@ -70,12 +70,12 @@ waitFor(
                 React.cloneElement(
                     kid,
                     {
-                        path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
+                        path: "/:screenName([a-zA-Z0-9_]{1,20})/reviews",
                         props: {
-                            path: "/:screenName([a-zA-Z0-9_]{1,20})/gamers",
+                            path: "/:screenName([a-zA-Z0-9_]{1,20})/reviews",
                         },
                     },
-                    React.createElement(ReviewsView, { twitterId: userId }, "Gamers")
+                    React.createElement(ReviewsView, { twitterId: userId }, "Reviews")
                 )
             );
         });
@@ -102,11 +102,11 @@ waitFor(
             let newPath = "/" + pathName.substr(pathName.lastIndexOf("/") + 1);
             ctx.result.props.children.push(
                 React.cloneElement(kid, {
-                    key: "gamers",
-                    isActive: () => document.location.pathname.endsWith("/gamers"),
-                    viewType: "gamers",
+                    key: "reviews",
+                    isActive: () => document.location.pathname.endsWith("/reviews"),
+                    viewType: "reviews",
                     to: {
-                        pathname: newPath + "/gamers",
+                        pathname: newPath + "/reviews",
                         query: {},
                     },
                     children: "Reviews",
