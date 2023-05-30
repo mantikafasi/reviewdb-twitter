@@ -5,14 +5,14 @@ import "./Reviews.css";
 type Props = {
     refetch: () => void;
     profileId: string;
-}
+};
 
 export default function Input({ refetch, profileId }: Props) {
     const [text, setText] = React.useState<string>("");
     const [user, setUser] = React.useState<ReviewDBUser | null>(null);
     let inputRef = React.useRef<HTMLSpanElement>(null);
-    const isAuthorized = () => user && user.token.length !== 0;
-    Extension.getUser().then((user) => {
+    const isAuthorized = () => !!user?.token;
+    ReviewDB.Auth.getUser().then((user) => {
         user && setUser(user);
     });
 
@@ -20,7 +20,7 @@ export default function Input({ refetch, profileId }: Props) {
         if (!isAuthorized()) {
             open("https://twitter.com/i/oauth2/authorize?response_type=code&client_id=SFVDakw2VVg3V2VrTVlNVkNTS0Y6MTpjaQ&redirect_uri=https://manti.vendicated.dev/api/reviewdb-twitter/auth&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain");
             //open("https://manti.vendicated.dev/api/reviewdb-twitter/morb")
-            Extension.authorize().then((res) => {
+            ReviewDB.Auth.authorize().then((res) => {
                 if (res?.user?.token) {
                     setUser(res.user);
                 } else {
@@ -38,7 +38,7 @@ export default function Input({ refetch, profileId }: Props) {
             ).then((res) => {
                 console.log(res);
                 setText("");
-                inputRef?.current && (inputRef.current.innerHTML = "") ;
+                inputRef?.current && (inputRef.current.innerHTML = "");
                 refetch();
             });
         }
@@ -54,7 +54,7 @@ export default function Input({ refetch, profileId }: Props) {
                             contentEditable: isAuthorized(),
                         }
                     } onKeyUp={
-                        (e:any /* whoever wrote typings for this should explode */) => {
+                        (e: any /* whoever wrote typings for this should explode */) => {
                             setText(e.target.textContent);
                         }
                     } >{
@@ -79,5 +79,5 @@ export default function Input({ refetch, profileId }: Props) {
             </div>
         </div>
 
-    )
+    );
 }

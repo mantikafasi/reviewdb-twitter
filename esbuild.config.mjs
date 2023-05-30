@@ -4,12 +4,16 @@ import copyStaticFiles from "esbuild-copy-static-files";
 const watch = process.argv.includes("--watch");
 
 const ctx = await esbuild.context({
-    entryPoints: ["./src/content.ts"],
+    entryPoints: ["./src/index.ts"],
+    outfile: "./build/bundle.js",
+
+    format: "iife",
+    globalName: "ReviewDB",
     bundle: true,
     jsxFactory: "React.createElement",
     jsxFragment: "React.Fragment",
+
     logLevel: "info",
-    outfile: "./build/bundle.js",
 
     plugins: [
         copyStaticFiles({

@@ -1,11 +1,13 @@
 const script = document.createElement("script");
 script.src = chrome.runtime.getURL("bundle.js");
+script.id = "review-db-script";
+script.dataset.extensionId = chrome.runtime.id;
 document.documentElement.append(script);
 
 const style = document.createElement("link");
 style.type = "text/css";
 style.rel = "stylesheet";
-style.href = browser.runtime.getURL("bundle.css");
+style.href = chrome.runtime.getURL("bundle.css");
 
 document.documentElement.append(script);
 

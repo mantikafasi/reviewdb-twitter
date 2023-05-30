@@ -2,36 +2,40 @@ import "./webpack/patchWebpack";
 
 import { waitFor } from "./webpack/webpack";
 
+export * as Webpack from "./webpack";
+export * as Utils from "./utils";
+
 import { Patcher } from "jsposed";
 import ReviewsView from "./components/ReviewsView";
 import { findInReactTree } from "./utils/tree";
 import { EXTENSION_ID } from "./utils/constants";
 import { ReviewDBUser } from "./utils/entities";
-const patcher = new Patcher();
+
+export const patcher = new Patcher();
 
 const browser = chrome;
 
-window.Extension = {
+export const Auth = {
     getToken() {
-        return new Promise(resolve => {
+        return new Promise<string | null>(resolve => {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "getToken" }, resolve);
         });
     },
     setToken(token: string) {
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "setToken", token }, resolve);
         });
     },
     authorize() {
-        return new Promise(resolve => {
+        return new Promise<{ token: string; user: ReviewDBUser } | null>(resolve => {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "authorize" }, resolve);
         });
     },
     getUser() {
-        return new Promise(resolve => {
+        return new Promise<ReviewDBUser>(resolve => {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "getUser" }, resolve);
         });
-    }
+    },
 };
 
 // declare react as global variable, later extension will use it to create components
@@ -82,10 +86,10 @@ waitFor(
 waitFor(
     m => m?.toString().includes("getDerivedStateFromError"),
     m => {
-        patcher.instead(m.prototype, "componentDidCatch", (ctx) => {
+        patcher.instead(m.prototype, "componentDidCatch", ctx => {
             // normally twitters error boundary would hide the error from console and send it to their api
             // this shows the error on console and prevents it from being sent to their api
-            console.error("reviewdb or twitter shitted itself",ctx.args[0], ctx.args[1]);
+            console.error("reviewdb or twitter shitted itself", ctx.args[0], ctx.args[1]);
         });
     }
 );
