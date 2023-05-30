@@ -10,7 +10,6 @@ import ReviewsView from "./components/ReviewsView";
 import { findInReactTree } from "./utils/tree";
 import { EXTENSION_ID } from "./utils/constants";
 import { ReviewDBUser } from "./utils/entities";
-import { createContext } from "react";
 
 export const patcher = new Patcher();
 
