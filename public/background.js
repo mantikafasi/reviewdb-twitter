@@ -31,6 +31,29 @@ chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResp
             storage().then(data => {
                 sendResponse(data.user);
             });
+            break;
+        case "fetch":
+            fetch(request.url, request.options).then(res => {
+                if (request.responseType === "json") {
+                    res.json().then(json => {
+                        sendResponse({
+                            json: json,
+                            status: res.status,
+                            ok: res.ok,
+                        });
+                    });
+                    return;
+                } else {
+                    res.text().then(text => {
+                        sendResponse({
+                            text: text,
+                            status: res.status,
+                            ok: res.ok,
+                        });
+                    });
+                    return;
+                }
+            });
     }
 });
 

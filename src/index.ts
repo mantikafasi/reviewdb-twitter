@@ -36,6 +36,15 @@ export const Auth = {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "getUser" }, resolve);
         });
     },
+    fetch(url: string, responseType: string, options?: RequestInit) {
+        return new Promise<{ status: number; text: string; json: any }>(resolve => {
+            browser.runtime.sendMessage(
+                EXTENSION_ID,
+                { type: "fetch", url, options, responseType },
+                resolve
+            );
+        });
+    },
 };
 
 // declare react as global variable, later extension will use it to create components

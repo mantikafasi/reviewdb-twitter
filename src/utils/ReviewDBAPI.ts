@@ -34,16 +34,18 @@ const WarningFlag = 0b00000010;
 export async function getReviews(id: string): Promise<Review[]> {
     var flags = 0;
     //if (!Settings.plugins.ReviewDB.showWarning) flags |= WarningFlag;
-    const req = await fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews?flags=${flags}`);
+    const res = await ReviewDB.Auth.fetch(
+        API_URL + `/api/reviewdb-twitter/users/${id}/reviews?flags=${flags}`,
+        "json"
+    );
 
-    const res = (await req.json()) as Response;
-
-    if (req.status !== 200) {
+    if (res.status !== 200) {
         //showToast(res.message);
         return [
             {
                 id: 0,
-                comment: "An Error occured while fetching reviews. Please try again later.",
+                comment:
+                    "An Error occured while ReviewDB.Auth.fetching reviews. Please try again later.",
                 timestamp: 0,
                 sender: {
                     id: 0,
@@ -57,27 +59,26 @@ export async function getReviews(id: string): Promise<Review[]> {
             },
         ];
     }
-    return res.reviews;
+    return res.json.reviews;
 }
 
 export async function addReview(reviewData: any, token: string): Promise<string> {
-    return fetch(API_URL + `/api/reviewdb-twitter/users/${reviewData.profileId}/reviews`, {
-        method: "PUT",
-        body: JSON.stringify({ comment: reviewData.comment }),
-        headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-        },
-    })
-        .then(r => r.text())
-        .then(res => {
-            //showToast(res.message);
-            return res ?? "An Error occured while adding review";
-        });
+    return ReviewDB.Auth.fetch(
+        API_URL + `/api/reviewdb-twitter/users/${reviewData.profileId}/reviews`,
+        "text",
+        {
+            method: "PUT",
+            body: JSON.stringify({ comment: reviewData.comment }),
+            headers: {
+                Authorization: token,
+                "Content-Type": "application/json",
+            },
+        }
+    ).then(r => r.text ?? "An Error occured while adding review");
 }
 
 export function deleteReview(id: number): Promise<Response> {
-    return fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews`, {
+    return ReviewDB.Auth.fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews`, "text", {
         method: "DELETE",
         headers: new Headers({
             "Content-Type": "application/json",
@@ -87,11 +88,11 @@ export function deleteReview(id: number): Promise<Response> {
             token: getToken(),
             reviewid: id,
         }),
-    }).then(r => r.json());
+    }).then(r => r.json);
 }
 
 export async function reportReview(id: number) {
-    const res = (await fetch(API_URL + "/api/reviewdb-twitter/reports", {
+    const res = await ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/reports", "text", {
         method: "PUT",
         headers: new Headers({
             "Content-Type": "application/json",
@@ -101,13 +102,13 @@ export async function reportReview(id: number) {
             reviewid: id,
             token: getToken(),
         }),
-    }).then(r => r.json())) as Response;
+    }).then(r => r.text);
     //showToast(await res.message);
 }
 
 export function getCurrentUserInfo(token: string): Promise<ReviewDBUser> {
-    return fetch(API_URL + "/api/reviewdb-twitter/users", {
+    return ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/users", "json", {
         body: JSON.stringify({ token }),
         method: "POST",
-    }).then(r => r.json());
+    }).then(r => r.json);
 }
