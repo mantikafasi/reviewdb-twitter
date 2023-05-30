@@ -1,5 +1,5 @@
 import { getReviews } from "../utils/ReviewDBAPI";
-import { Review } from "../utils/entities";
+import { Review, ReviewDBUser } from "../utils/entities";
 import Input from "./Input";
 import ReviewComponent from "./ReviewComponent";
 import Toast from "./Toast";
@@ -8,10 +8,17 @@ export default function ReviewsView(props: { twitterId: string; }) {
     const [reviews, setReviews] = React.useState<Review[]>([]);
     const [count, setCount] = React.useState<number>(0);
     const { toast } = require("react-toastify") as typeof import("react-toastify");
+    const [user, setUser] = React.useState<ReviewDBUser | null>(null);
 
     function refetch() {
         setCount(count + 1);
     }
+
+    React.useEffect(() => {
+        ReviewDB.Auth.getUser().then((user) => {
+            user && setUser(user);
+        });
+    }, []);
 
     React.useEffect(() => {
         getReviews(props.twitterId).then(reviews => setReviews(reviews)).catch(err => {
@@ -20,15 +27,26 @@ export default function ReviewsView(props: { twitterId: string; }) {
         });
     }, [props.twitterId, count]);
 
+    function authorize() {
+        ReviewDB.Auth.authorize().then((user) => {
+            if (!user) {
+                toast.error("An error occured while authorizing");
+                return;
+            }
+            setUser(user);
+            toast.success("Authorized successfully");
+        });
+    }
+
     return (
         <div style={{
             marginBottom: "100px"
         }}>
             <Toast />
 
-            <Input profileId={props.twitterId} refetch={refetch} />
+            <Input profileId={props.twitterId} refetch={refetch} auth={authorize} user={user} />
             {reviews &&
-                reviews.map(review => <ReviewComponent review={review} />)
+                reviews.map(review => <ReviewComponent review={review} user={user} />)
             }
         </div>
     );

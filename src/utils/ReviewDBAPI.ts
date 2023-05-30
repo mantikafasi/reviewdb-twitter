@@ -31,6 +31,10 @@ interface Response {
 
 const WarningFlag = 0b00000010;
 
+export function getUser(): Promise<ReviewDBUser> {
+    return ReviewDB.Auth.getUser();
+}
+
 export async function getReviews(id: string): Promise<Review[]> {
     var flags = 0;
     //if (!Settings.plugins.ReviewDB.showWarning) flags |= WarningFlag;
@@ -61,7 +65,10 @@ export async function getReviews(id: string): Promise<Review[]> {
     return res.json.reviews;
 }
 
-export async function addReview(reviewData: any, token: string) {
+export async function addReview(reviewData: any) {
+    let user = await getUser();
+    if (!user) return;
+
     return ReviewDB.Auth.fetch(
         API_URL + `/api/reviewdb-twitter/users/${reviewData.profileId}/reviews`,
         "text",
@@ -69,17 +76,20 @@ export async function addReview(reviewData: any, token: string) {
             method: "PUT",
             body: JSON.stringify({ comment: reviewData.comment }),
             headers: {
-                Authorization: token,
+                Authorization: user.token,
                 "Content-Type": "application/json",
             },
         }
     );
 }
 
-export function deleteReview(id: number): Promise<Response> {
+export async function deleteReview(id: number){
+    let user = await getUser();
+
     return ReviewDB.Auth.fetch(API_URL + `/api/reviewdb-twitter/users/${id}/reviews`, "text", {
         method: "DELETE",
         headers: new Headers({
+            "Authorization": user.token,
             "Content-Type": "application/json",
             Accept: "application/json",
         }),
@@ -87,13 +97,16 @@ export function deleteReview(id: number): Promise<Response> {
             token: getToken(),
             reviewid: id,
         }),
-    }).then(r => r.json);
+    });
 }
 
 export async function reportReview(id: number) {
-    const res = await ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/reports", "text", {
+    let user = await getUser();
+
+    return ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/reports", "text", {
         method: "PUT",
         headers: new Headers({
+            "Authorization": user.token,
             "Content-Type": "application/json",
             Accept: "application/json",
         }),
@@ -101,11 +114,13 @@ export async function reportReview(id: number) {
             reviewid: id,
             token: getToken(),
         }),
-    }).then(r => r.text);
-    //showToast(await res.message);
+    });
 }
 
-export function getCurrentUserInfo(token: string): Promise<ReviewDBUser> {
+export async function getCurrentUserInfo(token: string): Promise<ReviewDBUser | undefined> {
+    let user = await getUser();
+    if (!user) return;
+
     return ReviewDB.Auth.fetch(API_URL + "/api/reviewdb-twitter/users", "json", {
         body: JSON.stringify({ token }),
         method: "POST",

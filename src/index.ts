@@ -16,18 +16,8 @@ export const patcher = new Patcher();
 const browser = chrome;
 
 export const Auth = {
-    getToken() {
-        return new Promise<string | null>(resolve => {
-            browser.runtime.sendMessage(EXTENSION_ID, { type: "getToken" }, resolve);
-        });
-    },
-    setToken(token: string) {
-        return new Promise<void>(resolve => {
-            browser.runtime.sendMessage(EXTENSION_ID, { type: "setToken", token }, resolve);
-        });
-    },
     authorize() {
-        return new Promise<{ token: string; user: ReviewDBUser } | null>(resolve => {
+        return new Promise<ReviewDBUser | null>(resolve => {
             browser.runtime.sendMessage(EXTENSION_ID, { type: "authorize" }, resolve);
         });
     },

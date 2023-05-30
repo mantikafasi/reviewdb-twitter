@@ -7,21 +7,16 @@ import 'react-toastify/dist/ReactToastify.css';
 type Props = {
     refetch: () => void;
     profileId: string;
+    user: ReviewDBUser | null;
+    auth: () => void;
 };
 
-export default function Input({ refetch, profileId }: Props) {
+export default function Input({ refetch, profileId, user, auth }: Props) {
 
     const [text, setText] = React.useState<string>("");
-    const [user, setUser] = React.useState<ReviewDBUser | null>(null);
     let inputRef = React.useRef<HTMLSpanElement>(null);
     const isAuthorized = () => !!user?.token;
     const { toast } = require("react-toastify") as typeof import("react-toastify");
-
-    React.useEffect(() => {
-        ReviewDB.Auth.getUser().then((user) => {
-            user && setUser(user);
-        });
-    }, []);
 
     function handleClick(s: any) { // any because React.MouseEvent<HTMLButtonElement, MouseEvent> raises error
         if (isAuthorized()) {
@@ -29,27 +24,20 @@ export default function Input({ refetch, profileId }: Props) {
                 {
                     comment: text,
                     profileId: profileId,
-                }, user!.token
+                },
             ).then((res) => {
-                if (res.ok) {
-                    toast.success(res.text);
+                if (res!.ok) {
+                    toast.success(res!.text);
                     refetch();
                 } else {
-                    toast.error(res.text ?? "An error occured while sending review");
+                    toast.error(res!.text ?? "An error occured while sending review");
                 }
                 setText("");
                 inputRef?.current && (inputRef.current.innerHTML = "");
             });
         } else {
             open("https://twitter.com/i/oauth2/authorize?response_type=code&client_id=SFVDakw2VVg3V2VrTVlNVkNTS0Y6MTpjaQ&redirect_uri=https://manti.vendicated.dev/api/reviewdb-twitter/auth&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain");
-            ReviewDB.Auth.authorize().then((res) => {
-                if (res?.user?.token) {
-                    setUser(res.user);
-                } else {
-                    s.target.textContent = "An error occured while authorizing please try again later";
-                }
-                s.target.textContent = "Review";
-            });
+            auth();
             s.target.textContent = "Authorizing...";
         }
     }

@@ -23,8 +23,8 @@ chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResp
             });
             break;
         case "authorize":
-            oauthCallback.then((user, token) => {
-                sendResponse({ user: user });
+            oauthCallback.then((user) => {
+                sendResponse(user);
             });
             break;
         case "getUser":
@@ -61,10 +61,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     switch (request.type) {
         case "setUser":
             storage().then(data => {
-                data.token = request.user.token;
                 data.user = request.user;
                 chrome.storage.sync.set(data);
-                onAuthorizeCallback({ user: request.user, token: data.token });
+                onAuthorizeCallback(request.user);
             });
             break;
     }

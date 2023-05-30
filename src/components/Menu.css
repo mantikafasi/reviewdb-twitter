@@ -1,0 +1,36 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: rgb(0,0,0);
+    min-width: 200px;
+    right: 0;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 8px;
+}
+
+.option span {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 12px 0 12px 0;
+}
+
+.option:hover {
+    cursor: pointer;
+}
+
+.meatballMenu:hover {
+    cursor: pointer;
+}
