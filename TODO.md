@@ -1,6 +1,8 @@
 # things to do
-- [ ] make css files work
-- [ ] sanitize code
-- [ ] fix esbuild config for watch
-- [ ] write build script and get rid of webpack all together
-- [ ] somehow declare react globally 
+- [x] make css files work
+- [x] sanitize code
+- [x] fix esbuild config for watch
+- [x] write build script and get rid of webpack all together
+- [x] somehow declare react globally
+
+ALL DONE
