@@ -23,7 +23,7 @@ chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResp
             });
             break;
         case "authorize":
-            oauthCallback.then((user) => {
+            oauthCallback.then(user => {
                 sendResponse(user);
             });
             break;

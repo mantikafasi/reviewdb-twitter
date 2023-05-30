@@ -2,13 +2,21 @@
     "manifest_version": 3,
     "name": "Reviewdb Twitter",
     "version": "0.1.0",
-    "description": "My Chrome Extension",
+    "description": "Allows you to review other Twitter users",
     "icons": {
         "16": "icons/icon_16.png",
         "32": "icons/icon_32.png",
         "48": "icons/icon_48.png",
         "128": "icons/icon_128.png"
     },
+
+    "web_accessible_resources": [
+        {
+            "resources": ["bundle.js", "bundle.css"],
+            "matches": ["https://twitter.com/*"]
+        }
+    ],
+
     "content_scripts": [
         {
             "matches": ["https://twitter.com/*"],
@@ -20,26 +28,13 @@
             "js": ["auth.js"]
         }
     ],
+
     "background": {
         "service_worker": "background.js"
     },
-    "web_accessible_resources": [
-        {
-            "resources": ["bundle.js", "bundle.css"],
-            "matches": ["https://twitter.com/*"]
-        }
-    ],
-    "host_permissions": ["https://twitter.com/*"],
-    "permissions": ["declarativeNetRequest", "storage"],
-    "declarative_net_request": {
-        "rule_resources": [
-            {
-                "id": "modifyResponseHeaders",
-                "enabled": true,
-                "path": "modifyResponseHeaders.json"
-            }
-        ]
-    },
+
+    "permissions": ["storage"],
+
     "externally_connectable": {
         "matches": [
             "https://manti.vendicated.dev/api/reviewdb-twitter/auth",
