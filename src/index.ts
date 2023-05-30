@@ -37,7 +37,7 @@ export const Auth = {
         });
     },
     fetch(url: string, responseType: string, options?: RequestInit) {
-        return new Promise<{ status: number; text: string; json: any }>(resolve => {
+        return new Promise<{ status: number; text: string; json: any; ok: boolean }>(resolve => {
             browser.runtime.sendMessage(
                 EXTENSION_ID,
                 { type: "fetch", url, options, responseType },

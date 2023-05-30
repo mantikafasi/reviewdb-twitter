@@ -40,7 +40,6 @@ export async function getReviews(id: string): Promise<Review[]> {
     );
 
     if (res.status !== 200) {
-        //showToast(res.message);
         return [
             {
                 id: 0,
@@ -62,7 +61,7 @@ export async function getReviews(id: string): Promise<Review[]> {
     return res.json.reviews;
 }
 
-export async function addReview(reviewData: any, token: string): Promise<string> {
+export async function addReview(reviewData: any, token: string) {
     return ReviewDB.Auth.fetch(
         API_URL + `/api/reviewdb-twitter/users/${reviewData.profileId}/reviews`,
         "text",
@@ -74,7 +73,7 @@ export async function addReview(reviewData: any, token: string): Promise<string>
                 "Content-Type": "application/json",
             },
         }
-    ).then(r => r.text ?? "An Error occured while adding review");
+    );
 }
 
 export function deleteReview(id: number): Promise<Response> {

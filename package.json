@@ -17,10 +17,12 @@
         "adm-zip": "^0.5.10",
         "esbuild": "0.17.19",
         "esbuild-copy-static-files": "^0.1.0",
+        "esbuild-plugin-external-global": "^1.0.1",
         "prettier": "^2.8.8",
         "typescript": "^5.0.4"
     },
     "dependencies": {
-        "jsposed": "^1.0.4"
+        "jsposed": "^1.0.4",
+        "react-toastify": "^9.1.3"
     }
 }

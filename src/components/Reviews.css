@@ -1,6 +1,3 @@
-img {
-    max-width: 100%;
-}
 .avator {
     border-radius: 100px;
     width: 48px;
@@ -8,62 +5,41 @@ img {
     margin-right: 15px;
 }
 
-.tweet-header {
+.review-header {
     display: flex;
     align-items: flex-start;
+    margin: 16px 0 16px 0;
     font-size: 14px;
     margin-left: 25px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.tweet-header-info {
+.review-header-info {
     font-weight: bold;
     color: white;
 }
-.tweet-header-info span {
+.review-header-info span {
     color: #657786;
     font-weight: normal;
     margin-left: 5px;
 }
-.tweet-header-info p {
+.review-header-info p {
     font-weight: normal;
     margin-top: 5px;
 }
-.tweet-img-wrap {
-    padding-left: 60px;
-}
 
-.tweet-info-counts {
-    display: flex;
-    margin-left: 60px;
-    margin-top: 10px;
-}
-.tweet-info-counts div {
-    display: flex;
-    margin-right: 20px;
-}
 @media screen and (max-width: 430px) {
     body {
         padding-left: 20px;
         padding-right: 20px;
     }
-    .tweet-header {
+    .review-header {
         flex-direction: column;
     }
-    .tweet-header img {
+    .review-header img {
         margin-bottom: 20px;
     }
-    .tweet-header-info p {
+    .review-header-info p {
         margin-bottom: 30px;
-    }
-    .tweet-img-wrap {
-        padding-left: 0;
-    }
-    .tweet-info-counts {
-        display: flex;
-        margin-left: 0;
-    }
-    .tweet-info-counts div {
-        margin-right: 10px;
     }
 }
