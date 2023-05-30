@@ -1,70 +1,62 @@
-const storage = () => chrome.storage.sync.get();
+const getStorageData = () => chrome.storage.sync.get();
 let onAuthorizeCallback;
 const oauthCallback = new Promise(resolve => (onAuthorizeCallback = resolve));
 
-chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-    if (
-        sender.origin !== "https://twitter.com" &&
-        sender.origin !== "https://manti.vendicated.dev"
-    ) {
-        return; // i think this is pretty unneccesary tbh but docs had it so...
+chrome.runtime.onMessageExternal.addListener(async (request, sender, sendResponse) => {
+    switch (sender.origin) {
+        case "https://twitter.com":
+        case "https://manti.vendicated.dev":
+            break;
+        default:
+            return;
     }
+
     switch (request.type) {
-        case "getToken":
-            storage().then(data => {
-                console.log(data);
-                sendResponse({ token: data.token });
-            });
+        case "getToken": {
+            const data = await getStorageData();
+            console.log(data);
+            sendResponse({ token: data.token });
             break;
-        case "setToken":
-            storage().then(data => {
-                data.token = request.token;
-                chrome.storage.sync.set(data);
-            });
+        }
+        case "setToken": {
+            const data = await getStorageData();
+            data.token = request.token;
+            chrome.storage.sync.set(data);
             break;
-        case "authorize":
-            oauthCallback.then(user => {
-                sendResponse(user);
-            });
+        }
+        case "authorize": {
+            sendResponse(await oauthCallback);
             break;
-        case "getUser":
-            storage().then(data => {
-                sendResponse(data.user);
-            });
+        }
+        case "getUser": {
+            const data = await getStorageData();
+            sendResponse(data.user);
             break;
-        case "fetch":
-            fetch(request.url, request.options).then(res => {
-                if (request.responseType === "json") {
-                    res.json().then(json => {
-                        sendResponse({
-                            json: json,
-                            status: res.status,
-                            ok: res.ok,
-                        });
-                    });
-                    return;
-                } else {
-                    res.text().then(text => {
-                        sendResponse({
-                            text: text,
-                            status: res.status,
-                            ok: res.ok,
-                        });
-                    });
-                    return;
-                }
-            });
+        }
+        case "fetch": {
+            const res = await fetch(request.url, request.options);
+
+            const data = {
+                status: res.status,
+                ok: res.ok,
+                ...(request.responseType === "json"
+                    ? { json: await res.json() }
+                    : { text: await res.text() }),
+            };
+
+            sendResponse(data);
+        }
     }
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async request => {
     switch (request.type) {
-        case "setUser":
-            storage().then(data => {
-                data.user = request.user;
-                chrome.storage.sync.set(data);
-                onAuthorizeCallback(request.user);
-            });
+        case "setUser": {
+            const data = await getStorageData();
+            data.user = request.user;
+            chrome.storage.sync.set(data);
+            onAuthorizeCallback(request.user);
             break;
+        }
     }
 });
