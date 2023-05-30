@@ -23,21 +23,26 @@ import { WebpackRequireModules, _initWebpack, listeners, subscriptions } from ".
 
 let webpackChunk: any[];
 
-Object.defineProperty(window, WEBPACK_CHUNK, {
-    get: () => webpackChunk,
-    set: v => {
-        if (v?.push !== Array.prototype.push) {
-            console.info(`Patching ${WEBPACK_CHUNK}.push`);
-            _initWebpack(v);
-            patchPush();
-            // @ts-ignore
-            delete window[WEBPACK_CHUNK];
-            window[WEBPACK_CHUNK] = v;
-        }
-        webpackChunk = v;
-    },
-    configurable: true,
-});
+if (window[WEBPACK_CHUNK]) {
+    console.info(`Patching ${WEBPACK_CHUNK}.push`);
+    _initWebpack(window[WEBPACK_CHUNK]);
+    patchPush();
+} else {
+    Object.defineProperty(window, WEBPACK_CHUNK, {
+        set: v => {
+            if (v?.push !== Array.prototype.push) {
+                console.info(`Patching ${WEBPACK_CHUNK}.push`);
+                _initWebpack(v);
+                patchPush();
+                // @ts-ignore
+                delete window[WEBPACK_CHUNK];
+                window[WEBPACK_CHUNK] = v;
+            }
+            webpackChunk = v;
+        },
+        configurable: true,
+    });
+}
 
 function patchPush() {
     function handlePush(chunk: any) {
@@ -45,11 +50,6 @@ function patchPush() {
             const modules = chunk[1] as WebpackRequireModules;
             for (const id in modules) {
                 let mod = modules[id];
-                let code = mod.toString().replaceAll("\n", "");
-                // unnamed toplevel functions aren't valid. However 0, function() makes it a statement
-                if (code.startsWith("function(")) {
-                    code = "0," + code;
-                }
 
                 const factory = (modules[id] = function (module, exports, require) {
                     mod(module, exports, require);
