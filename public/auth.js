@@ -1,7 +1,14 @@
-response = document.body.innerText;
+try {
+    response = JSON.parse(document.body.innerText);
 
-const browser = chrome || browser;
+    const browser = chrome || browser;
 
-browser.runtime.sendMessage({ type: "setToken", token: "response.token" }, function (response) {
-    document.body.innerText = response.message;
-});
+    browser.runtime.sendMessage({ type: "setUser", user:response }, function(response) {
+        document.body.innerHTML = "Successfully authorized. You can close this tab now."
+    });
+
+} catch (e) {
+    console.log(e);
+    document.body.innerHTML = "An error occured while authorizing. Please try again later.";
+}
+
