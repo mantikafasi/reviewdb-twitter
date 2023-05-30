@@ -3,7 +3,7 @@ import { Review, ReviewDBUser } from '../utils/entities';
 import Menu from './Menu';
 import './Reviews.css';
 
-export default function ReviewComponent(props: { review: Review; user: ReviewDBUser | null,refetch: () => void; }) {
+export default function ReviewComponent(props: { review: Review; user: ReviewDBUser | null, refetch: () => void; }) {
     const { toast } = require("react-toastify") as typeof import("react-toastify");
 
     const deleteRev = () => {
@@ -42,7 +42,11 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
             <div className="review-header-info">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                     <div>
-                        <a target="_blank" href={'https://twitter.com/' + props.review.sender.username}>{props.review.sender.displayName}</a>  <span>{props.review.sender.username}</span><span> {new Date(props.review.timestamp * 1000).toLocaleString()}
+                        <a target="_blank" href={'https://twitter.com/' + props.review.sender.username}>
+                            {props.review.sender.displayName}
+                        </a>
+                        <span> {props.review.sender.username}</span>
+                        <span> {new Date(props.review.timestamp * 1000).toLocaleString()}
                         </span>
                     </div>
                     <Menu options={

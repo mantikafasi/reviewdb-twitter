@@ -1,3 +1,4 @@
+import { Auth } from "..";
 import { getReviews } from "../utils/ReviewDBAPI";
 import { Review, ReviewDBUser } from "../utils/entities";
 import Input from "./Input";
@@ -15,7 +16,7 @@ export default function ReviewsView(props: { twitterId: string; }) {
     }
 
     React.useEffect(() => {
-        ReviewDB.Auth.getUser().then((user) => {
+        Auth.getUser().then((user) => {
             user && setUser(user);
         });
     }, []);
@@ -28,7 +29,7 @@ export default function ReviewsView(props: { twitterId: string; }) {
     }, [props.twitterId, count]);
 
     function authorize() {
-        ReviewDB.Auth.authorize().then((user) => {
+        Auth.authorize().then((user) => {
             if (!user) {
                 toast.error("An error occured while authorizing");
                 return;
@@ -45,9 +46,7 @@ export default function ReviewsView(props: { twitterId: string; }) {
             <Toast />
 
             <Input profileId={props.twitterId} refetch={refetch} auth={authorize} user={user} />
-            {reviews &&
-                reviews.map(review => <ReviewComponent review={review} user={user} refetch={refetch} />)
-            }
+            {reviews?.map(review => <ReviewComponent review={review} user={user} refetch={refetch} />)}
         </div>
     );
 }

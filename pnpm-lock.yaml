@@ -12,6 +12,9 @@ devDependencies:
   '@types/chrome':
     specifier: ^0.0.237
     version: 0.0.237
+  '@types/node':
+    specifier: ^20.2.5
+    version: 20.2.5
   '@types/react':
     specifier: ^18.2.7
     version: 18.2.7
@@ -253,6 +256,10 @@ packages:
 
   /@types/har-format@1.2.10:
     resolution: {integrity: sha512-o0J30wqycjF5miWDKYKKzzOU1ZTLuA42HZ4HE7/zqTOc/jTLdQ5NhYWvsRQo45Nfi1KHoRdNhteSI4BAxTF1Pg==}
+    dev: true
+
+  /@types/node@20.2.5:
+    resolution: {integrity: sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ==}
     dev: true
 
   /@types/prop-types@15.7.5:

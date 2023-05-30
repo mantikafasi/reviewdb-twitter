@@ -7,5 +7,5 @@ export default function Toast() {
         <div>
             <ToastContainer position='bottom-right' theme='dark' />
         </div>
-    )
+    );
 }
