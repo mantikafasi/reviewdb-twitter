@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
 import copyStaticFiles from "esbuild-copy-static-files";
-import externalGlobalPlugin from "esbuild-plugin-external-global"
+import externalGlobalPlugin from "esbuild-plugin-external-global";
 
 const watch = process.argv.includes("--watch");
 
@@ -22,7 +22,7 @@ const ctx = await esbuild.context({
             dest: "./build",
         }),
         externalGlobalPlugin.externalGlobalPlugin({
-            'react': 'window.React',
+            react: "ReviewDB.React",
         }),
     ],
 });

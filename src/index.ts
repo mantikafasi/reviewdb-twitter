@@ -2,6 +2,7 @@ import "./webpack/patchWebpack";
 
 import { waitFor } from "./webpack/webpack";
 
+export { React } from "./webpack/common";
 export * as Webpack from "./webpack";
 export * as Utils from "./utils";
 
