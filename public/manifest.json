@@ -14,6 +14,10 @@
         {
             "resources": ["bundle.js", "bundle.css"],
             "matches": ["https://twitter.com/*"]
+        },
+        {
+            "resources": ["authpage.html"],
+            "matches": ["https://manti.vendicated.dev/*"]
         }
     ],
 
@@ -24,7 +28,7 @@
             "js": ["content.js"]
         },
         {
-            "matches": ["https://manti.vendicated.dev/api/reviewdb-twitter/*"],
+            "matches": ["https://manti.vendicated.dev/api/reviewdb-twitter/auth*"],
             "js": ["auth.js"]
         }
     ],
