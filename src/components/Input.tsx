@@ -44,11 +44,14 @@ export default function Input({ refetch, profileId, user, auth }: Props) {
         <div className="wrapper">
             <div className="input-box">
                 <div className="review-area">
-                    <img
-                        src={user?.avatarURL || "https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png"}
-                        alt=""
-                        className="avator"
-                    />
+                    <a target="_blank" href={"https://twitter.com/" + user?.username}>
+                        <img
+                            src={user?.avatarURL || "https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png"}
+                            alt=""
+                            className="avator"
+                        />
+                    </a>
+
                     <span
                         ref={inputRef}
                         className="input"
