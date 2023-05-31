@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ReviewDB</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                width: 300px;
+                padding: 10px;
+                background-color: #333;
+                color: #fff;
+                margin-top: 3px; /* Adjust the margin from the top */
+                margin-left: 15px; /* Adjust the margin from the left */
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .avatar {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+
+            .username {
+                font-weight: bold;
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+
+            .displayName {
+                color: #aaa;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .authorize-button {
+                display: block;
+                background-color: #1da1f2;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-left: auto;
+            }
+
+            .not-logged-in-text {
+                text-align: center;
+                display: none;
+                font-size: large;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="user-info" id="userInfo">
+            <img class="avatar" id="avatar" src="" alt="Avatar" />
+            <div>
+                <div class="username" id="username"></div>
+                <div class="displayName" id="displayName"></div>
+            </div>
+        </div>
+        <div class="not-logged-in-text" id="notLoggedInText">
+            <p>You are not logged in.</p>
+            <p>Click the button below to log in.</p>
+        </div>
+
+        <button class="authorize-button" id="authorizeButton">ReAuthorize</button>
+
+        <script src="popup.js"></script>
+    </body>
+</html>

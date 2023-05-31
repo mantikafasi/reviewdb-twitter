@@ -12,22 +12,16 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
     }
 
     switch (request.type) {
-        case "getToken": {
-            const data = await getStorageData();
-            console.log(data);
-            sendResponse({ token: data.token });
-            break;
-        }
-        case "setToken": {
-            const data = await getStorageData();
-            data.token = request.token;
-            chrome.storage.sync.set(data);
-            break;
-        }
         case "authorize": {
-            sendResponse(await oauthCallback);
+            chrome.tabs.create({
+                url: "https://twitter.com/i/oauth2/authorize?response_type=code&client_id=SFVDakw2VVg3V2VrTVlNVkNTS0Y6MTpjaQ&redirect_uri=https://manti.vendicated.dev/api/reviewdb-twitter/auth&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain",
+            });
+            oauthCallback.then(user => {
+                sendResponse(user);
+            });
             break;
         }
+
         case "getUser": {
             const data = await getStorageData();
             sendResponse(data.user);
@@ -49,14 +43,29 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
     }
 });
 
-chrome.runtime.onMessage.addListener(async request => {
+// for some weird reason making this function async causes it to return undefined
+// https://stackoverflow.com/a/74777631
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.type) {
         case "setUser": {
-            const data = await getStorageData();
-            data.user = request.user;
-            chrome.storage.sync.set(data);
-            onAuthorizeCallback(request.user);
+            getStorageData().then(data => {
+                data.user = request.user;
+                chrome.storage.sync.set(data);
+                onAuthorizeCallback(request.user);
+            });
+            break;
+        }
+        case "getUser": {
+            getStorageData().then(data => sendResponse(data.user));
+            break;
+        }
+        case "authorize": {
+            chrome.tabs.create({
+                url: "https://twitter.com/i/oauth2/authorize?response_type=code&client_id=SFVDakw2VVg3V2VrTVlNVkNTS0Y6MTpjaQ&redirect_uri=https://manti.vendicated.dev/api/reviewdb-twitter/auth&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain",
+            });
+            oauthCallback.then(sendResponse);
             break;
         }
     }
+    return true;
 });

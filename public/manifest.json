@@ -20,6 +20,9 @@
             "matches": ["https://manti.vendicated.dev/*"]
         }
     ],
+    "action": {
+        "default_popup": "popup.html"
+    },
 
     "content_scripts": [
         {
@@ -37,7 +40,7 @@
         "service_worker": "background.js"
     },
 
-    "permissions": ["storage"],
+    "permissions": ["storage", "tabs"],
 
     "externally_connectable": {
         "matches": [

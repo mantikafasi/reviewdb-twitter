@@ -35,7 +35,6 @@ export default function Input({ refetch, profileId, user, auth }: Props) {
                 inputRef?.current && (inputRef.current.innerHTML = "");
             });
         } else {
-            open("https://twitter.com/i/oauth2/authorize?response_type=code&client_id=SFVDakw2VVg3V2VrTVlNVkNTS0Y6MTpjaQ&redirect_uri=https://manti.vendicated.dev/api/reviewdb-twitter/auth&scope=tweet.read%20users.read%20offline.access&state=state&code_challenge=challenge&code_challenge_method=plain");
             auth();
             s.target.textContent = "Authorizing...";
         }
