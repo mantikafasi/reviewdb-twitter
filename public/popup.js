@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     chrome.runtime.sendMessage({ type: "getUser" }, user => {
         if (user) {
-            document.getElementById("avatar").src = user.avatar_url;
+            document.getElementById("avatar").src = user.avatarURL;
             document.getElementById("username").textContent = `@${user.username}`;
             document.getElementById("displayName").textContent = user.displayName;
         } else {

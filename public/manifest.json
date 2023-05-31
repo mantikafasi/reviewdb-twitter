@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Reviewdb Twitter",
+    "name": "ReviewDB Twitter",
     "version": "0.1.0",
     "description": "Allows you to review other Twitter users",
     "icons": {

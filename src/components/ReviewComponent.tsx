@@ -33,6 +33,16 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
         }
         );
     };
+    
+    let menuOptions: any[] = []
+    if (props.review.sender.twitterId === props.user?.twitterId) {
+        menuOptions.push({
+            text: "Delete Review",
+            onClick: deleteRev,
+            iconType: "delete",
+        })
+    }
+
 
     return (
         <div className="review-header">
@@ -56,11 +66,7 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
                                 onClick: reportRev,
                                 iconType: "report",
                             },
-                            {
-                                text: "Delete Review",
-                                onClick: deleteRev,
-                                iconType: "delete",
-                            },
+                            ...menuOptions
                         ]
                     } />
                 </div>

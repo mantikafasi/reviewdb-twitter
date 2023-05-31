@@ -47,10 +47,10 @@ export interface BanInfo {
 
 export interface ReviewDBUser {
     ID: number;
-    discordID: string;
+    twitterId: string;
     username: string;
-    avatar_url: string;
-    clientMod: string;
+    displayName: string;
+    avatarURL: string;
     token: string;
     warningCount: number;
     badges: any[];

@@ -45,7 +45,7 @@ export default function Input({ refetch, profileId, user, auth }: Props) {
             <div className="input-box">
                 <div className="review-area">
                     <img
-                        src={user?.avatar_url || "https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png"}
+                        src={user?.avatarURL || "https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png"}
                         alt=""
                         className="avator"
                     />
