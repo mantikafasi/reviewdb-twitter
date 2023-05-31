@@ -33,10 +33,6 @@
 }
 
 @media screen and (max-width: 430px) {
-    body {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
     .review-header {
         flex-direction: column;
     }
@@ -48,15 +44,6 @@
     }
 }
 
-a {
-    text-decoration: none;
-    color: unset;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 .avator:hover {
     cursor: pointer;
     opacity: 0.8;
@@ -64,4 +51,13 @@ a:hover {
 
 .avator:active {
     translate: 0 1px;
+}
+
+.review-header a {
+    text-decoration: none;
+    color: unset;
+}
+
+.review-header a:hover {
+    text-decoration: underline;
 }

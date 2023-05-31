@@ -1,13 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Open Sans", sans-serif;
-}
 .wrapper {
     width: 100%;
     padding: 25px 25px 15px 25px;
+    font-family: "TwitterChirp", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 .input {
@@ -77,7 +72,7 @@
     transition: background 0.2s ease;
 }
 
-button:disabled {
+.bottom button:disabled {
     opacity: 0.5;
     pointer-events: none;
 }
