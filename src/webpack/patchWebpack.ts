@@ -19,21 +19,17 @@
 
 import { WEBPACK_CHUNK } from "../utils/constants";
 
-import { WebpackRequireModules, _initWebpack, find, listeners, subscriptions } from "./webpack";
+import { WebpackRequireModules, _initWebpack, listeners, subscriptions, wreq } from "./webpack";
 
 let webpackChunk: any[];
 
 if (window[WEBPACK_CHUNK]) {
-    console.info(`Patching ${WEBPACK_CHUNK}.push`);
+    console.info(`Patching ${WEBPACK_CHUNK}.push (already existant, likely due to cache)`);
     _initWebpack(window[WEBPACK_CHUNK]);
     patchPush();
 
-    for (const [filter, callback] of subscriptions) {
-        const res = find(filter, true, true);
-        if (res) {
-            callback(res, res.id);
-            subscriptions.delete(filter);
-        }
+    for (const id in wreq.m) {
+        patchModule(wreq.m, id);
     }
 } else {
     Object.defineProperty(window, WEBPACK_CHUNK, {
@@ -53,68 +49,72 @@ if (window[WEBPACK_CHUNK]) {
     });
 }
 
+function patchModule(modules: WebpackRequireModules, id: string) {
+    const mod = modules[id];
+
+    const factory = (modules[id] = function (module, exports, require) {
+        mod(module, exports, require);
+
+        // There are (at the time of writing) 2 modules exporting the window
+        // Make these non enumerable to improve webpack search performance
+        if (module.exports === window) {
+            Object.defineProperty(require.c, id, {
+                value: require.c[id],
+                enumerable: false,
+                configurable: true,
+                writable: true,
+            });
+            return;
+        }
+
+        const numberId = Number(id);
+        for (const callback of listeners) {
+            try {
+                callback(exports, numberId);
+            } catch (err) {
+                console.error("Error in webpack listener", err);
+            }
+        }
+
+        for (const [filter, callback] of subscriptions) {
+            try {
+                if (filter(exports)) {
+                    subscriptions.delete(filter);
+                    callback(exports, numberId);
+                } else if (typeof exports === "object") {
+                    if (exports.default && filter(exports.default)) {
+                        subscriptions.delete(filter);
+                        callback(exports.default, numberId);
+                    }
+
+                    for (const nested in exports)
+                        if (nested.length <= 3) {
+                            if (exports[nested] && filter(exports[nested])) {
+                                subscriptions.delete(filter);
+                                callback(exports[nested], numberId);
+                            }
+                        }
+                }
+            } catch (err) {
+                console.error("Error while firing callback for webpack chunk", err);
+            }
+        }
+    } as any as { toString: () => string; original: any; (...args: any[]): void });
+
+    // for some reason throws some error on which calling .toString() leads to infinite recursion
+    // when you force load all chunks???
+    try {
+        factory.toString = () => mod.toString();
+        factory.original = mod;
+    } catch {}
+}
+
 function patchPush() {
     function handlePush(chunk: any) {
         try {
             const modules = chunk[1] as WebpackRequireModules;
             for (const id in modules) {
-                let mod = modules[id];
-
-                const factory = (modules[id] = function (module, exports, require) {
-                    mod(module, exports, require);
-
-                    // There are (at the time of writing) 2 modules exporting the window
-                    // Make these non enumerable to improve webpack search performance
-                    if (module.exports === window) {
-                        Object.defineProperty(require.c, id, {
-                            value: require.c[id],
-                            enumerable: false,
-                            configurable: true,
-                            writable: true,
-                        });
-                        return;
-                    }
-
-                    const numberId = Number(id);
-                    for (const callback of listeners) {
-                        try {
-                            callback(exports, numberId);
-                        } catch (err) {
-                            console.error("Error in webpack listener", err);
-                        }
-                    }
-
-                    for (const [filter, callback] of subscriptions) {
-                        try {
-                            if (filter(exports)) {
-                                subscriptions.delete(filter);
-                                callback(exports, numberId);
-                            } else if (typeof exports === "object") {
-                                if (exports.default && filter(exports.default)) {
-                                    subscriptions.delete(filter);
-                                    callback(exports.default, numberId);
-                                }
-
-                                for (const nested in exports)
-                                    if (nested.length <= 3) {
-                                        if (exports[nested] && filter(exports[nested])) {
-                                            subscriptions.delete(filter);
-                                            callback(exports[nested], numberId);
-                                        }
-                                    }
-                            }
-                        } catch (err) {
-                            console.error("Error while firing callback for webpack chunk", err);
-                        }
-                    }
-                } as any as { toString: () => string; original: any; (...args: any[]): void });
-
-                // for some reason throws some error on which calling .toString() leads to infinite recursion
-                // when you force load all chunks???
-                try {
-                    factory.toString = () => mod.toString();
-                    factory.original = mod;
-                } catch {}
+                patchModule(modules, id);
             }
         } catch (err) {
             console.error("Error in handlePush", err);
