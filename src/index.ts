@@ -10,6 +10,7 @@ import ReviewsView from "./components/ReviewsView";
 import { findInReactTree } from "./utils/tree";
 import { EXTENSION_ID } from "./utils/constants";
 import { ReviewDBUser } from "./utils/entities";
+import { React } from "./webpack/common";
 
 export const patcher = new Patcher();
 
@@ -36,9 +37,6 @@ export const Auth = {
         });
     },
 };
-
-// declare react as global variable, later extension will use it to create components
-waitFor("useState", React => (window.React = React));
 
 waitFor("computeRootMatch", ReactRouter => {
     patcher.after(ReactRouter.prototype, "render", ctx => {

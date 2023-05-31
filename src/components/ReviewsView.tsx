@@ -1,6 +1,7 @@
 import { Auth } from "..";
 import { getReviews } from "../utils/ReviewDBAPI";
 import { Review, ReviewDBUser } from "../utils/entities";
+import { React } from "../webpack/common";
 import Input from "./Input";
 import ReviewComponent from "./ReviewComponent";
 import Toast from "./Toast";

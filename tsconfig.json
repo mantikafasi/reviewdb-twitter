@@ -15,7 +15,9 @@
         "strict": true,
         "noImplicitAny": false,
         "target": "ESNEXT",
-        "jsx": "react"
+        "jsx": "react",
+        "jsxFactory": "ReviewDB.Webpack.Common.React.createElement",
+        "jsxFragmentFactory": "ReviewDB.Webpack.Common.React.Fragment"
     },
     "include": ["src/**/*"]
 }

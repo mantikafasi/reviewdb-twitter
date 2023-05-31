@@ -19,7 +19,7 @@
 
 import { WEBPACK_CHUNK } from "../utils/constants";
 
-import { WebpackRequireModules, _initWebpack, listeners, subscriptions } from "./webpack";
+import { WebpackRequireModules, _initWebpack, find, listeners, subscriptions } from "./webpack";
 
 let webpackChunk: any[];
 
@@ -27,6 +27,14 @@ if (window[WEBPACK_CHUNK]) {
     console.info(`Patching ${WEBPACK_CHUNK}.push`);
     _initWebpack(window[WEBPACK_CHUNK]);
     patchPush();
+
+    for (const [filter, callback] of subscriptions) {
+        const res = find(filter, true, true);
+        if (res) {
+            callback(res, res.id);
+            subscriptions.delete(filter);
+        }
+    }
 } else {
     Object.defineProperty(window, WEBPACK_CHUNK, {
         get: () => webpackChunk,
@@ -68,7 +76,6 @@ function patchPush() {
                     }
 
                     const numberId = Number(id);
-
                     for (const callback of listeners) {
                         try {
                             callback(exports, numberId);

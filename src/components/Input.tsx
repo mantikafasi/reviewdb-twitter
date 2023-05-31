@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { addReview } from "../utils/ReviewDBAPI";
 import { ReviewDBUser } from "../utils/entities";
+import { React } from "../webpack/common";
 
 type Props = {
     refetch: () => void;

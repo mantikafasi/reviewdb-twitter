@@ -1,3 +1,4 @@
+import { React } from "../webpack/common";
 import './Menu.css';
 
 export default function Menu(props: { options: { text: string, onClick: () => void, iconType: 'delete' | 'report'; }[]; }) {
