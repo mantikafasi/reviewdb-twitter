@@ -34,24 +34,24 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
         );
     };
 
-    let menuOptions: any[] = []
+    let menuOptions: any[] = [];
     if (props.review.sender.twitterId === props.user?.twitterId) {
         menuOptions.push({
             text: "Delete Review",
             onClick: deleteRev,
             iconType: "delete",
-        })
+        });
     }
 
     return (
         <div className="review-header">
-            <a target='_blank' href={'https://twitter.com/' + props.review.sender.username}>
-                <img src={props.review.sender.avatarURL} alt="" className="avator" />
+            <a href={'https://twitter.com/' + props.review.sender.username}>
+                <img src={props.review.sender.avatarURL} alt={props.review.sender.displayName} className="avator" />
             </a>
             <div className="review-header-info">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                     <div>
-                        <a target="_blank" href={'https://twitter.com/' + props.review.sender.username}>
+                        <a href={'https://twitter.com/' + props.review.sender.username}>
                             {props.review.sender.displayName}
                         </a>
                         <span> @{props.review.sender.username}</span>
