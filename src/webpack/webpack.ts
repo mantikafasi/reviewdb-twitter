@@ -17,6 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { Logger } from "../utils";
+
 export let _resolveReady: () => void;
 /**
  * Fired once a gateway connection to Discord has been established.
@@ -111,7 +113,7 @@ export function find(filter: FilterFn, getDefault = true, isWaitFor = false) {
 
     if (!isWaitFor) {
         const err = new Error("Didn't find module matching this filter");
-        console.warn(err, filter);
+        new Logger("Webpack").warn(err, filter);
     }
 
     return isWaitFor ? [null, null] : null;

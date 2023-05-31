@@ -17,14 +17,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { Logger } from "../utils/Logger";
 import { WEBPACK_CHUNK } from "../utils/constants";
 
 import { WebpackRequireModules, _initWebpack, listeners, subscriptions, wreq } from "./webpack";
 
 let webpackChunk: any[];
 
+const lagger = new Logger("Webpak");
+
 if (window[WEBPACK_CHUNK]) {
-    console.info(`Patching ${WEBPACK_CHUNK}.push (already existant, likely due to cache)`);
+    lagger.info(`Patching ${WEBPACK_CHUNK}.push (already existant, likely due to cache)`);
     _initWebpack(window[WEBPACK_CHUNK]);
     patchPush();
 
@@ -36,7 +39,7 @@ if (window[WEBPACK_CHUNK]) {
         get: () => webpackChunk,
         set: v => {
             if (v?.push !== Array.prototype.push) {
-                console.info(`Patching ${WEBPACK_CHUNK}.push`);
+                lagger.info(`Patching ${WEBPACK_CHUNK}.push`);
                 _initWebpack(v);
                 patchPush();
                 // @ts-ignore
@@ -72,7 +75,7 @@ function patchModule(modules: WebpackRequireModules, id: string) {
             try {
                 callback(exports, numberId);
             } catch (err) {
-                console.error("Error in webpack listener", err);
+                lagger.error("Error in webpack listener", err);
             }
         }
 
@@ -96,7 +99,7 @@ function patchModule(modules: WebpackRequireModules, id: string) {
                         }
                 }
             } catch (err) {
-                console.error("Error while firing callback for webpack chunk", err);
+                lagger.error("Error while firing callback for webpack chunk", err);
             }
         }
     } as any as { toString: () => string; original: any; (...args: any[]): void });
@@ -117,7 +120,7 @@ function patchPush() {
                 patchModule(modules, id);
             }
         } catch (err) {
-            console.error("Error in handlePush", err);
+            lagger.error("Error in handlePush", err);
         }
 
         return handlePush.original.call(window[WEBPACK_CHUNK], chunk);

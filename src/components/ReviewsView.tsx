@@ -1,4 +1,5 @@
 import { Auth } from "..";
+import { Logger } from "../utils";
 import { getReviews } from "../utils/ReviewDBAPI";
 import { Review, ReviewDBUser } from "../utils/entities";
 import { React } from "../webpack/common";
@@ -25,7 +26,7 @@ export default function ReviewsView(props: { twitterId: string; }) {
     React.useEffect(() => {
         getReviews(props.twitterId).then(reviews => setReviews(reviews)).catch(err => {
             toast.error("An error occured while fetching reviews");
-            console.error(err);
+            new Logger("ReviewsView").error(err);
         });
     }, [props.twitterId, count]);
 

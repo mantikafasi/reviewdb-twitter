@@ -12,8 +12,10 @@ import { findInReactTree } from "./utils/tree";
 import { EXTENSION_ID } from "./utils/constants";
 import { ReviewDBUser } from "./utils/entities";
 import { React } from "./webpack/common";
+import { Logger } from "./utils/Logger";
 
-export const patcher = new Patcher();
+export const patcher = new Patcher("ReviewDB");
+export const logger = new Logger("Main");
 
 const browser = chrome;
 
@@ -85,7 +87,7 @@ waitFor("getDerivedStateFromError", m => {
     patcher.instead(m.prototype, "componentDidCatch", ctx => {
         // normally twitters error boundary would hide the error from console and send it to their api
         // this shows the error on console and prevents it from being sent to their api
-        console.error("reviewdb or twitter shitted itself", ctx.args[0], ctx.args[1]);
+        logger.error("reviewdb or twitter shitted itself", ctx.args[0], ctx.args[1]);
     });
 });
 
