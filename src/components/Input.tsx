@@ -62,20 +62,21 @@ export default function Input({ refetch, profileId, user, auth }: Props) {
                         }}>
                         {isAuthorized() ? "" : "Please authorize to send a review"}
                     </span>
+
+                    <div className="bottom">
+                        <span className="counter" style={{
+                            display: text.length == 0 ? "none" : "inherit"
+                        }}>
+                            {1000 - text.length}
+                        </span>
+                        <button
+                            onClick={handleClick}
+                            disabled={(text.length === 0 && isAuthorized()) || text.length > 1000}
+                        >
+                            {isAuthorized() ? "Review" : "Authorize with twitter"}
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div className="bottom">
-                <span className="counter" style={{
-                    display: text.length == 0 ? "none" : "inherit"
-                }}>
-                    {1000 - text.length}
-                </span>
-                <button
-                    onClick={handleClick}
-                    disabled={(text.length === 0 && isAuthorized()) || text.length > 1000}
-                >
-                    {isAuthorized() ? "Review" : "Authorize with twitter"}
-                </button>
             </div>
         </div>
 
