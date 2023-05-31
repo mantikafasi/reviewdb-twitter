@@ -33,7 +33,7 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
         }
         );
     };
-    
+
     let menuOptions: any[] = []
     if (props.review.sender.twitterId === props.user?.twitterId) {
         menuOptions.push({
@@ -42,7 +42,6 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
             iconType: "delete",
         })
     }
-
 
     return (
         <div className="review-header">
@@ -55,7 +54,7 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
                         <a target="_blank" href={'https://twitter.com/' + props.review.sender.username}>
                             {props.review.sender.displayName}
                         </a>
-                        <span> {props.review.sender.username}</span>
+                        <span> @{props.review.sender.username}</span>
                         <span> {new Date(props.review.timestamp * 1000).toLocaleString()}
                         </span>
                     </div>
