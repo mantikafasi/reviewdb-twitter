@@ -31,6 +31,12 @@
     cursor: pointer;
 }
 
-.meatballMenu:hover {
+.meatballMenu {
+    filter: brightness(0.6);
+    transition: 200ms filter ease-in-out;
     cursor: pointer;
+}
+
+.meatballMenu:hover {
+    filter: brightness(1);
 }

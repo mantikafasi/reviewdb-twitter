@@ -1,25 +1,29 @@
+import { MouseEventHandler } from "react";
 import { React } from "../webpack/common";
 import './Menu.css';
 
 export default function Menu(props: { options: { text: string, onClick: () => void, iconType: 'delete' | 'report'; }[]; }) {
     const [showMenu, setShowMenu] = React.useState<boolean>(false);
 
+    React.useEffect(() => {
+        if (showMenu) {
+            const closeMenu = () => setShowMenu(false);
+
+            document.addEventListener('click', closeMenu);
+            return () => document.removeEventListener('click', closeMenu);
+        }
+    }, [showMenu]);
+
     return (
         <div className="dropdown">
             <div className='meatballMenu' onClick={() => setShowMenu(!showMenu)}>
                 <svg
-                    viewBox="0 0 25 25"
-                    width="25"
-                    height="25"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                    height="1.25em"
+                    fill="currentColor"
+                    aria-label="Review Options"
                 >
-                    <circle cx="2.5" cy="8" r=".75" />
-                    <circle cx="8" cy="8" r=".75" />
-                    <circle cx="13.5" cy="8" r=".75" />
+                    <path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
                 </svg>
             </div>
             {
@@ -29,7 +33,8 @@ export default function Menu(props: { options: { text: string, onClick: () => vo
                             props.options.map(option =>
                                 <Option text={option.text}
                                     iconComponent={option.iconType === 'delete' ? <DangerButton /> : <ReportButton />}
-                                    onClick={() => {
+                                    onClick={e => {
+                                        e.stopPropagation();
                                         option.onClick();
                                         setShowMenu(false);
                                     }}
@@ -38,12 +43,11 @@ export default function Menu(props: { options: { text: string, onClick: () => vo
                     </div>
                 )
             }
-
         </div>
     );
 }
 
-export function Option(props: { text: string; iconComponent: React.ReactNode; onClick?: () => void; }) {
+export function Option(props: { text: string; iconComponent: React.ReactNode; onClick?: MouseEventHandler<HTMLDivElement>; }) {
     return (
         <div className="option" onClick={props.onClick}>
             {props.iconComponent}
