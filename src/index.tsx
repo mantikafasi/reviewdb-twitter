@@ -1,6 +1,7 @@
 import "./webpack/patchWebpack";
 import "./utils/cssVariables";
 import "./components/index.css";
+import "./components/common.css";
 
 import { filters, waitFor } from "./webpack/webpack";
 
@@ -69,7 +70,6 @@ waitFor(
     m => m.prototype?.render?.toString().includes("props.from"),
     Route => {
         patcher.before(Route.prototype, "render", ctx => {
-            console.log(ctx.thisObject);
             const { location, children } = ctx.thisObject.props;
 
             if (children.some(c => c?.props?.path === "/i/keyboard_shortcuts")) {
@@ -91,6 +91,8 @@ waitFor(
                     )
                 );
             }
+
+            if (location) return;
 
             if (!children.some(c => c?.props?.path?.endsWith("/media")) || location) return;
             let kid = ctx.thisObject.props.children[0];
@@ -145,6 +147,36 @@ waitFor(
                     retainScrollPosition: true,
                 })
             );
+        });
+    }
+);
+
+waitFor(
+    m => m?.Promoted,
+    m => {
+        console.log("found");
+        patcher.before(m.prototype, "render", ctx => {
+            let followButton = ctx.thisObject.props.followButton;
+
+            ctx.thisObject.props.followButton = [
+                (<div className="popout-div">
+                    <a href={"/i/" + ctx.thisObject.props.userId + "/reviews"} onClick={(e) => {
+                        e.preventDefault();
+
+                        ctx.thisObject._reactInternals.return.stateNode.context.history.push("/i/" + ctx.thisObject.props.userId + "/reviews");
+                        ctx._returnEarly = true;
+                        ctx.result = null;
+                    }}>
+                        <button className="popout-twitter-button">
+                            <span className="popout-span">
+                                Reviews
+                            </span>
+                        </button>
+                    </a>
+                </div>),
+                followButton
+            ];
+            console.log(ctx.thisObject);
         });
     }
 );

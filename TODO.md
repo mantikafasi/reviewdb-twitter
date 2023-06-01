@@ -9,5 +9,6 @@
 - [x] create a simple popup for extension which displays user info
 - [ ] Make it look good on white & non black theme
 - [ ] Maybe use twitter popouts instead so we look more native
-
+- [ ] close popup automaticly after clicking on reviews button
+- [ ] fix reviews modal causing error on refresh
 ~~ALL DONE AGAIN :blobcatcozy:~~

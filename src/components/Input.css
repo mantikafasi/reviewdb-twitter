@@ -57,7 +57,7 @@
     border-right: 1px solid var(--rdb-text-muted);
 }
 
-.bottom button {
+.twitter-button {
     padding: 9px 18px;
     border: none;
     outline: none;
@@ -70,11 +70,11 @@
     transition: filter 0.2s ease;
 }
 
-.bottom button:disabled {
+.twitter-button:disabled {
     opacity: 0.5;
     pointer-events: none;
 }
 
-.bottom button:hover {
+.twitter-button:hover {
     filter: brightness(0.9);
 }

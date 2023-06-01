@@ -1,0 +1,27 @@
+.popout-twitter-button {
+    border: none;
+    outline: none;
+    min-height: 36px;
+    min-width: 36px;
+    background-color: var(--rdb-button-black);
+    border-radius: 50px;
+    font-weight: bold;
+    font-family: "TwitterChirp";
+    margin-left: 16px;
+
+    color: var(--rdb-button-white);
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+.popout-div {
+    display: flex;
+    flex-basis: auto;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.popout-span {
+    font-size: 15px;
+    padding: 0 8px 0 9px;
+}

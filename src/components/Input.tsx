@@ -71,6 +71,7 @@ export default function Input({ refetch, profileId, user, auth }: Props) {
                         {1000 - text.length}
                     </span>
                     <button
+                        className="twitter-button"
                         onClick={handleClick}
                         disabled={(text.length === 0 && isAuthorized()) || text.length > 1000}
                     >

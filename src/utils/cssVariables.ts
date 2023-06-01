@@ -7,6 +7,8 @@ const Variables = {
     "border-color": "borderColor",
     "text-muted": "gray700",
     "button-color": "blue500",
+    "button-black": "buttonBlack",
+    "button-white": "buttonWhite",
 };
 
 waitFor("_activeTheme", m => {

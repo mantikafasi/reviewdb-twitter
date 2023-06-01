@@ -5,7 +5,7 @@ import externalGlobalPlugin from "esbuild-plugin-external-global";
 const watch = process.argv.includes("--watch");
 
 const ctx = await esbuild.context({
-    entryPoints: ["./src/index.ts"],
+    entryPoints: ["./src/index.tsx"],
     outfile: "./build/bundle.js",
 
     format: "iife",
