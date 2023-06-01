@@ -16,7 +16,7 @@ export default function ReviewsView(props: { twitterId?: string; }) {
 
     if (!props.twitterId) {
         // if twitterId is not provided, get it from url which will be provided by openModal function
-        props.twitterId = ReactRouter.useParams().twitterId;
+        props.twitterId = ReactRouter.useParams().userId;
     }
 
     function refetch() {

@@ -72,7 +72,7 @@ waitFor(
         patcher.before(Route.prototype, "render", ctx => {
             const { location, children } = ctx.thisObject.props;
 
-            if (children.some(c => c?.props?.path === "/i/keyboard_shortcuts")) {
+            if (children.some(c => c?.props?.path === "/i/keyboard_shortcuts") && !children.some(c => c?.props?.path === "/i/:userId/reviews")) {
                 // adding modal
                 ctx.thisObject.props.children.unshift(
                     React.cloneElement(
@@ -131,6 +131,8 @@ waitFor(
 
             let kid = ctx.result.props.children[0];
             const pathName = kid.props.to.pathname;
+
+            if (!pathName) return;
 
             let newPath = "/" + pathName.substr(pathName.lastIndexOf("/") + 1);
             ctx.result.props.children.push(
