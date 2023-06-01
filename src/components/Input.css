@@ -1,20 +1,18 @@
 .wrapper {
     width: 100%;
     padding: 25px 25px 15px 25px;
-    font-family: "TwitterChirp", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--rdb-font);
     box-sizing: border-box;
 }
 
 .input {
     width: 100%;
     font-size: 20px;
-    font-weight: 500;
     margin-left: 8px;
-    color: gray;
+    color: var(--rdb-text-normal);
     resize: none;
     overflow: hidden;
     background-color: transparent;
-    border-bottom: 1px white;
 }
 
 .input[contenteditable="true"] {
@@ -23,7 +21,7 @@
 
 .input[contenteditable]:empty::before {
     content: "What do you think about this user?";
-    color: gray;
+    color: var(--rdb-text-muted);
 }
 
 .input:hover {
@@ -37,7 +35,7 @@
 .review-area {
     display: flex;
     padding: 15px 0 15px 0;
-    border-bottom: 1px solid #aab8c2;
+    border-bottom: 1px solid var(--rdb-border-color);
 }
 
 .review-area::-webkit-scrollbar {
@@ -56,7 +54,7 @@
     font-weight: 500;
     margin-right: 15px;
     padding-right: 15px;
-    border-right: 1px solid #aab8c2;
+    border-right: 1px solid var(--rdb-text-muted);
 }
 
 .bottom button {
@@ -66,10 +64,10 @@
     border-radius: 50px;
     font-size: 16px;
     font-weight: 700;
-    background: #1da1f2;
-    color: #fff;
+    background: var(--rdb-button-color);
+    color: var(--rdb-text-normal);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: filter 0.2s ease;
 }
 
 .bottom button:disabled {
@@ -78,5 +76,5 @@
 }
 
 .bottom button:hover {
-    background: #0d8bd9;
+    filter: brightness(0.9);
 }

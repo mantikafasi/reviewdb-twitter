@@ -1,4 +1,6 @@
 import "./webpack/patchWebpack";
+import "./utils/cssVariables";
+import "./components/index.css";
 
 import { waitFor } from "./webpack/webpack";
 

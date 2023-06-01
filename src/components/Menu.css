@@ -21,7 +21,7 @@
 }
 
 .option span {
-    color: white;
+    color: var(--rdb-text-normal);
     font-size: 15px;
     font-weight: 600;
     margin: 12px 0 12px 0;
@@ -32,11 +32,11 @@
 }
 
 .meatballMenu {
-    filter: brightness(0.6);
-    transition: 200ms filter ease-in-out;
+    color: var(--rdb-text-muted);
+    transition: 200ms color ease-out;
     cursor: pointer;
 }
 
 .meatballMenu:hover {
-    filter: brightness(1);
+    color: var(--rdb-text-normal);
 }

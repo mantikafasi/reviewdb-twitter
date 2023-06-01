@@ -55,7 +55,7 @@ export default function ReviewComponent(props: { review: Review; user: ReviewDBU
                             {props.review.sender.displayName}
                         </a>
                         <span> @{props.review.sender.username}</span>
-                        <span> {new Date(props.review.timestamp * 1000).toLocaleString()}
+                        <span> · {new Date(props.review.timestamp * 1000).toLocaleString()}
                         </span>
                     </div>
                     <Menu options={

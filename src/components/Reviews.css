@@ -13,20 +13,21 @@
     align-items: flex-start;
     margin: 16px 25px 16px 25px;
     font-size: 14px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--rdb-font);
 }
 
 .review-header-info {
     font-weight: bold;
-    color: white;
+    color: var(--rdb-text-normal);
     width: 100%;
 }
 
 .review-header-info span {
-    color: #657786;
+    color: var(--rdb-text-muted);
+    font-size: 15px;
     font-weight: normal;
-    margin-left: 5px;
 }
+
 .review-header-info p {
     font-weight: normal;
     margin-top: 5px;
@@ -56,6 +57,7 @@
 .review-header a {
     text-decoration: none;
     color: unset;
+    font-size: 15px;
 }
 
 .review-header a:hover {
