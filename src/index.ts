@@ -2,7 +2,7 @@ import "./webpack/patchWebpack";
 import "./utils/cssVariables";
 import "./components/index.css";
 
-import { waitFor } from "./webpack/webpack";
+import { filters, waitFor } from "./webpack/webpack";
 
 export { React } from "./webpack/common";
 export * as Webpack from "./webpack";
@@ -43,6 +43,14 @@ export const Auth = {
     },
 };
 
+export const ReactRouter = {
+    useParams: null as any,
+};
+
+waitFor(filters.byCode(".match", ".params"), m => {
+    ReactRouter.useParams = m;
+});
+
 waitFor("computeRootMatch", ReactRouter => {
     patcher.after(ReactRouter.prototype, "render", ctx => {
         let res = findInReactTree(
@@ -61,12 +69,32 @@ waitFor(
     m => m.prototype?.render?.toString().includes("props.from"),
     Route => {
         patcher.before(Route.prototype, "render", ctx => {
+            console.log(ctx.thisObject);
             const { location, children } = ctx.thisObject.props;
 
-            if (location) return;
-            if (!children.some(c => c?.props?.path?.endsWith("/media"))) return;
+            if (children.some(c => c?.props?.path === "/i/keyboard_shortcuts")) {
+                // adding modal
+                ctx.thisObject.props.children.unshift(
+                    React.cloneElement(
+                        children.find(c => c?.props?.path === "/i/keyboard_shortcuts"),
+                        {
+                            path: "/i/:userId/reviews",
+                            modalSize: "dynamic",
+                            withBackground: true,
+                            key: "/i/:userId/reviews",
+                            shouldRenderAsModal: () => true,
+                            props: {
+                                path: "/i/:userId/reviews",
+                            },
+                        },
+                        React.createElement(ReviewsView, {}, "Reviews")
+                    )
+                );
+            }
 
+            if (!children.some(c => c?.props?.path?.endsWith("/media")) || location) return;
             let kid = ctx.thisObject.props.children[0];
+
             const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
 
             ctx.thisObject.props.children.unshift(
