@@ -127,7 +127,7 @@ waitFor(
     m => m.prototype?._renderLinks,
     Links => {
         patcher.after(Links.prototype, "render", ctx => {
-            if (!ctx.result?.key?.includes("Tweets-")) return;
+            //if (!ctx.result?.key?.includes("Tweets-")) return; keys are localized so this wont work on other languages
 
             let kid = ctx.result.props.children[0];
             const pathName = kid.props.to.pathname;
@@ -176,7 +176,6 @@ waitFor(
                 </div>),
                 followButton
             ];
-            console.log(ctx.thisObject);
         });
     }
 );

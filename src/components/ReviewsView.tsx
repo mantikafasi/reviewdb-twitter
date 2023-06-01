@@ -6,6 +6,7 @@ import { React } from "../webpack/common";
 import Input from "./Input";
 import ReviewComponent from "./ReviewComponent";
 import Toast from "./Toast";
+import "./common.css";
 
 export default function ReviewsView(props: { twitterId?: string; }) {
     const [reviews, setReviews] = React.useState<Review[]>([]);
@@ -48,12 +49,16 @@ export default function ReviewsView(props: { twitterId?: string; }) {
 
     return (
         <div style={{
-            marginBottom: "100px"
+            marginBottom: "64px"
         }}>
             <Toast />
 
             <Input profileId={props.twitterId!} refetch={refetch} auth={authorize} user={user} />
-            {reviews?.map(review => <ReviewComponent review={review} user={user} refetch={refetch} />)}
+            {reviews?.length !== 0 ? reviews?.map(review => <ReviewComponent review={review} user={user} refetch={refetch} />) : (
+                <span className="nobody-reviewed-text">
+                    Looks like nobody reviewed this user yet. Be the first one!
+                </span>
+            )}
         </div>
     );
 }

@@ -25,3 +25,14 @@
     font-size: 15px;
     padding: 0 8px 0 9px;
 }
+
+.nobody-reviewed-text {
+    display: block;
+    font-size: 20px;
+    margin-left: 16px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: "TwitterChirp";
+    color: var(--rdb-text-normal);
+    margin-top: 16px;
+}
