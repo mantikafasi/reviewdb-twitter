@@ -50,7 +50,7 @@
 }
 
 .bottom .counter {
-    color: gray;
+    color: var(--rdb-text-muted);
     font-weight: 500;
     margin-right: 15px;
     padding-right: 15px;
