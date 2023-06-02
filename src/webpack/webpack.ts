@@ -161,6 +161,38 @@ export function findByCode(...code: string[]) {
 }
 
 /**
+ * Finds a mangled module by the provided code "code" (must be unique and can be anywhere in the module)
+ * then maps it into an easily usable module via the specified mappers
+ * @param code Code snippet
+ * @param mappers Mappers to create the non mangled exports
+ * @returns Unmangled exports as specified in mappers
+ *
+ * @example mapMangledModule("headerIdIsManaged:", {
+ *             openModal: filters.byCode("headerIdIsManaged:"),
+ *             closeModal: filters.byCode("key==")
+ *          })
+ */
+export function mapMangledModule<S extends string>(
+    moduleId: number,
+    mappers: Record<S, FilterFn>
+): Record<S, any> {
+    const exports = {} as Record<S, any>;
+
+    const mod = wreq(moduleId);
+    outer: for (const key in mod) {
+        const member = mod[key];
+        for (const newName in mappers) {
+            // if the current mapper matches this module
+            if (mappers[newName](member)) {
+                exports[newName] = member;
+                continue outer;
+            }
+        }
+    }
+    return exports;
+}
+
+/**
  * Wait for a module that matches the provided filter to be registered,
  * then call the callback with the module as the first argument
  */

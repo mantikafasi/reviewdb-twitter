@@ -16,6 +16,7 @@ import { EXTENSION_ID } from "./utils/constants";
 import { ReviewDBUser } from "./utils/entities";
 import { React } from "./webpack/common";
 import { Logger } from "./utils/Logger";
+import { ReactRouter } from "./utils/ReactRouter";
 
 export const patcher = new Patcher("ReviewDB");
 export const logger = new Logger("Main");
@@ -44,13 +45,6 @@ export const Auth = {
     },
 };
 
-export const ReactRouter = {
-    useParams: null as any,
-};
-
-waitFor(filters.byCode(".match", ".params"), m => {
-    ReactRouter.useParams = m;
-});
 
 waitFor("computeRootMatch", ReactRouter => {
     patcher.after(ReactRouter.prototype, "render", ctx => {
@@ -73,7 +67,6 @@ waitFor(
             const { location, children } = ctx.thisObject.props;
             if (children.some(c => c?.props?.path === ("/i/display")))
                 console.log(children.find(c => c?.props?.path === "/i/display"));
-
             console.log(ctx.thisObject);
             if (children.some(c => c?.props?.path === "/i/display") && !children.some(c => c?.props?.path === "/i/reviews")) {
                 // adding modal
@@ -163,8 +156,9 @@ waitFor(
             ctx.thisObject.props.followButton = [
                 React.createElement(
                     () => {
-                        let history = find(m => m?.rs).k6();
-                        let location = find(m => m?.rs).TH();
+                        let history = ReactRouter.useHistory();
+                        //let location = ReactRouter.useLocation();
+                        //console.log(location);
                         return (<div className="popout-div">
                             <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
                                 e.preventDefault();
@@ -180,7 +174,6 @@ waitFor(
                             </a>
                         </div >
                         )
-
                     }
                 )
                 ,
