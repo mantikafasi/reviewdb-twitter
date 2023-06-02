@@ -8,7 +8,9 @@ import ReviewComponent from "./ReviewComponent";
 import Toast from "./Toast";
 import "./common.css";
 
-export default function ReviewsView(props: { twitterId?: string; }) {
+export default function ReviewsView(props: {
+    location?: any; twitterId?: string;
+}) {
     const [reviews, setReviews] = React.useState<Review[]>([]);
     const [count, setCount] = React.useState<number>(0);
     const { toast } = require("react-toastify") as typeof import("react-toastify");
@@ -26,8 +28,7 @@ export default function ReviewsView(props: { twitterId?: string; }) {
 
     if (!props.twitterId) {
         // if twitterId is not provided, get it from url which will be provided by openModal function
-        const query = new URLSearchParams(window.location.search);
-        props.twitterId = query.get("userId")!;
+        props.twitterId = props.location.query.userId;
     }
 
     function refetch() {

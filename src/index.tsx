@@ -3,7 +3,7 @@ import "./utils/cssVariables";
 import "./components/index.css";
 import "./components/common.css";
 
-import { filters, waitFor } from "./webpack/webpack";
+import { filters, find, waitFor } from "./webpack/webpack";
 
 export { React } from "./webpack/common";
 export * as Webpack from "./webpack";
@@ -85,6 +85,7 @@ waitFor(
                             modalSize: "dynamic",
                             withBackground: true,
                             key: "/i/reviews",
+                            restoreBackgroundFromPreviousPath: true,
                             component: ReviewsView
                         }
                     )
@@ -160,21 +161,29 @@ waitFor(
             let followButton = ctx.thisObject.props.followButton;
 
             ctx.thisObject.props.followButton = [
-                (<div className="popout-div">
-                    <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
-                        e.preventDefault();
+                React.createElement(
+                    () => {
+                        let history = find(m => m?.rs).k6();
+                        let location = find(m => m?.rs).TH();
+                        return (<div className="popout-div">
+                            <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
+                                e.preventDefault();
+                                // { background: location, previousLocation: location, previousPath: "/home" }
 
-                        ctx.thisObject._reactInternals.return.stateNode.context.history.push("/i/reviews?userId=" + ctx.thisObject.props.userId);
-                        ctx._returnEarly = true;
-                        ctx.result = null;
-                    }}>
-                        <button className="popout-twitter-button">
-                            <span className="popout-span">
-                                Reviews
-                            </span>
-                        </button>
-                    </a>
-                </div>),
+                                history.push("/i/reviews?userId=" + ctx.thisObject.props.userId);
+                            }}>
+                                <button className="popout-twitter-button">
+                                    <span className="popout-span">
+                                        Reviews
+                                    </span>
+                                </button>
+                            </a>
+                        </div >
+                        )
+
+                    }
+                )
+                ,
                 followButton
             ];
         });
