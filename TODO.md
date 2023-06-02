@@ -13,5 +13,5 @@
 - [ ] fix reviews modal causing error on refresh (possibly because of patching another router)
 - [ ] when not logged in prevent twitters footer from overlapping reviews
 - [ ] use "history" instead of messing with react internals
-- [ ] meatball doesnt work on modal
+- [x] fix meatball not working on modal
 ~~ALL DONE AGAIN :blobcatcozy:~~

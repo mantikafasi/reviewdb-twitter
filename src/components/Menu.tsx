@@ -9,8 +9,8 @@ export default function Menu(props: { options: { text: string, onClick: () => vo
         if (showMenu) {
             const closeMenu = () => setShowMenu(false);
 
-            document.addEventListener('click', closeMenu);
-            return () => document.removeEventListener('click', closeMenu);
+            document.addEventListener('mousedown', closeMenu);
+            return () => document.removeEventListener('mousedown', closeMenu);
         }
     }, [showMenu]);
 
