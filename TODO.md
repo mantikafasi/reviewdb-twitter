@@ -9,9 +9,10 @@
 - [x] create a simple popup for extension which displays user info
 - [x] Make it look good on white & non black theme // kinda done?
 - [x] Maybe use twitter popouts instead so we look more native
-- [ ] close popup automaticly after clicking on reviews button
+- [x] close popup automaticly after clicking on reviews button
 - [ ] fix reviews modal causing error on refresh (possibly because of patching another router)
-- [ ] when not logged in prevent twitters footer from overlapping reviews
-- [ ] use "history" instead of messing with react internals
+- [x] when not logged in prevent twitters footer from overlapping reviews
+- [x] use "history" instead of messing with react internals
 - [x] fix meatball not working on modal
 ~~ALL DONE AGAIN :blobcatcozy:~~
+

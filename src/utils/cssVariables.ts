@@ -9,6 +9,7 @@ const Variables = {
     "button-color": "blue500",
     "button-black": "buttonBlack",
     "button-white": "buttonWhite",
+    "button-outlined-border": "buttonOutlinedBorder",
 };
 
 waitFor("_activeTheme", m => {

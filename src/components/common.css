@@ -1,15 +1,14 @@
 .popout-twitter-button {
-    border: none;
     outline: none;
     min-height: 36px;
     min-width: 36px;
-    background-color: var(--rdb-button-black);
+    background-color: transparent;
     border-radius: 50px;
-    font-weight: bold;
     font-family: "TwitterChirp";
     margin-left: 16px;
-
-    color: var(--rdb-button-white);
+    margin-right: 4px;
+    border: var(--rdb-button-outlined-border) 1px solid;
+    color: var(--rdb-button-black);
     cursor: pointer;
     transition: filter 0.2s ease;
 }
@@ -22,6 +21,8 @@
 }
 
 .popout-span {
+    font:var(--rdb-font);
+    font-weight: bold;
     font-size: 15px;
     padding: 0 8px 0 9px;
 }
@@ -31,8 +32,13 @@
     font-size: 20px;
     margin-left: 16px;
     font-weight: bold;
+    margin-bottom: 32px;
     font-style: italic;
     font-family: "TwitterChirp";
     color: var(--rdb-text-normal);
     margin-top: 16px;
+}
+
+[role="dialog"] .nobody-reviewed-text {
+    margin-bottom: -32px;
 }

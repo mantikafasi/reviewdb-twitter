@@ -149,7 +149,6 @@ waitFor(
 waitFor(
     m => m?.Promoted,
     m => {
-        console.log("found");
         patcher.before(m.prototype, "render", ctx => {
             let followButton = ctx.thisObject.props.followButton;
 
@@ -163,6 +162,7 @@ waitFor(
                             <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
                                 e.preventDefault();
                                 // { background: location, previousLocation: location, previousPath: "/home" }
+                                (Array.from(document.querySelectorAll("[data-testid]")) as any).find(m => m?.dataset?.testid === "HoverCard").remove();
 
                                 history.push("/i/reviews?userId=" + ctx.thisObject.props.userId);
                             }}>

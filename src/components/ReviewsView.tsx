@@ -1,4 +1,4 @@
-import { Auth, ReactRouter } from "..";
+import { Auth } from "..";
 import { Logger } from "../utils";
 import { getReviews } from "../utils/ReviewDBAPI";
 import { Review, ReviewDBUser } from "../utils/entities";
