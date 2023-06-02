@@ -14,9 +14,20 @@ export default function ReviewsView(props: { twitterId?: string; }) {
     const { toast } = require("react-toastify") as typeof import("react-toastify");
     const [user, setUser] = React.useState<ReviewDBUser | null>(null);
 
+    /*
+    let history = ReviewDB.Webpack.cache[81549].exports.Z
+    let ctx = history();
+    ctx.displayName = "Router-History"
+    let realCtx = React.useContext(ctx)
+    debugger
+    console.log(realCtx) //undefined
+    */
+
+
     if (!props.twitterId) {
         // if twitterId is not provided, get it from url which will be provided by openModal function
-        props.twitterId = ReactRouter.useParams().userId;
+        const query = new URLSearchParams(window.location.search);
+        props.twitterId = query.get("userId")!;
     }
 
     function refetch() {

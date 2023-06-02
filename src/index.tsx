@@ -71,23 +71,22 @@ waitFor(
     Route => {
         patcher.before(Route.prototype, "render", ctx => {
             const { location, children } = ctx.thisObject.props;
+            if (children.some(c => c?.props?.path === ("/i/display")))
+                console.log(children.find(c => c?.props?.path === "/i/display"));
 
-            if (children.some(c => c?.props?.path === "/i/keyboard_shortcuts") && !children.some(c => c?.props?.path === "/i/:userId/reviews")) {
+            console.log(ctx.thisObject);
+            if (children.some(c => c?.props?.path === "/i/display") && !children.some(c => c?.props?.path === "/i/reviews")) {
                 // adding modal
                 ctx.thisObject.props.children.unshift(
                     React.cloneElement(
-                        children.find(c => c?.props?.path === "/i/keyboard_shortcuts"),
+                        children.find(c => c?.props?.path === "/i/display"),
                         {
-                            path: "/i/:userId/reviews",
+                            path: "/i/reviews",
                             modalSize: "dynamic",
                             withBackground: true,
-                            key: "/i/:userId/reviews",
-                            shouldRenderAsModal: () => true,
-                            props: {
-                                path: "/i/:userId/reviews",
-                            },
-                        },
-                        React.createElement(ReviewsView, {}, "Reviews")
+                            key: "/i/reviews",
+                            component: ReviewsView
+                        }
                     )
                 );
             }
@@ -162,10 +161,10 @@ waitFor(
 
             ctx.thisObject.props.followButton = [
                 (<div className="popout-div">
-                    <a href={"/i/" + ctx.thisObject.props.userId + "/reviews"} onClick={(e) => {
+                    <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
                         e.preventDefault();
 
-                        ctx.thisObject._reactInternals.return.stateNode.context.history.push("/i/" + ctx.thisObject.props.userId + "/reviews");
+                        ctx.thisObject._reactInternals.return.stateNode.context.history.push("/i/reviews?userId=" + ctx.thisObject.props.userId);
                         ctx._returnEarly = true;
                         ctx.result = null;
                     }}>
