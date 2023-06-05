@@ -8,7 +8,7 @@
         "w": "pnpm watch",
         "watch": "pnpm build --watch",
         "pack": "node pack.js",
-        "repack": "npm run build && npm run pack",
+        "repack": "pnpm run build && pnpm run pack",
         "format": "prettier --write --ignore-unknown \"{config,public,src}/**/*.{html,css,js,ts,json}\""
     },
     "devDependencies": {

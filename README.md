@@ -7,6 +7,11 @@
 
 [**Chrome** extension]() <!-- TODO: Add chrome extension link inside parenthesis -->
 
+![screenshot 1](screenshot1.jpg)
+![screenshot 2](screenshot2.jpg)
+![screenshot 3](screenshot3.jpg)
+
+
 ## Contribution
 
 Suggestions and pull requests are welcomed!.
