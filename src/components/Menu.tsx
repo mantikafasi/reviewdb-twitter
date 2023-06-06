@@ -7,10 +7,14 @@ export default function Menu(props: { options: { text: string, onClick: () => vo
 
     React.useEffect(() => {
         if (showMenu) {
-            const closeMenu = () => setShowMenu(false);
+            const handleClickOutside = (event) => {
+                if (!event.target.closest('span')) {
+                    setShowMenu(false);
+                }
+              };
 
-            document.addEventListener('mousedown', closeMenu);
-            return () => document.removeEventListener('mousedown', closeMenu);
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
         }
     }, [showMenu]);
 

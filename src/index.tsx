@@ -65,9 +65,6 @@ waitFor(
     Route => {
         patcher.before(Route.prototype, "render", ctx => {
             const { location, children } = ctx.thisObject.props;
-            if (children.some(c => c?.props?.path === ("/i/display")))
-                console.log(children.find(c => c?.props?.path === "/i/display"));
-            console.log(ctx.thisObject);
             if (children.some(c => c?.props?.path === "/i/display") && !children.some(c => c?.props?.path === "/i/reviews")) {
                 // adding modal
                 ctx.thisObject.props.children.unshift(
@@ -155,25 +152,30 @@ waitFor(
             ctx.thisObject.props.followButton = [
                 React.createElement(
                     () => {
-                        let history = ReactRouter.useHistory();
-                        //let location = ReactRouter.useLocation();
-                        //console.log(location);
-                        return (<div className="popout-div">
-                            <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
-                                e.preventDefault();
-                                // { background: location, previousLocation: location, previousPath: "/home" }
-                                (Array.from(document.querySelectorAll("[data-testid]")) as any).find(m => m?.dataset?.testid === "HoverCard").remove();
+                        try {
+                            let history = ReactRouter.useHistory();
+                            //let location = ReactRouter.useLocation();
+                            //console.log(location);
+                            return (<div className="popout-div">
+                                <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
+                                    e.preventDefault();
+                                    // { background: location, previousLocation: location, previousPath: "/home" }
+                                    (Array.from(document.querySelectorAll("[data-testid]")) as any).find(m => m?.dataset?.testid === "HoverCard").remove();
 
-                                history.push("/i/reviews?userId=" + ctx.thisObject.props.userId);
-                            }}>
-                                <button className="popout-twitter-button">
-                                    <span className="popout-span">
-                                        Reviews
-                                    </span>
-                                </button>
-                            </a>
-                        </div >
-                        )
+                                    history.push("/i/reviews?userId=" + ctx.thisObject.props.userId);
+                                }}>
+                                    <button className="popout-twitter-button">
+                                        <span className="popout-span">
+                                            Reviews
+                                        </span>
+                                    </button>
+                                </a>
+                            </div >
+                            )
+                        } catch (e) {
+                            logger.error(e);
+                            return null;
+                        }
                     }
                 )
                 ,
