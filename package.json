@@ -1,6 +1,6 @@
 {
     "name": "reviewdb-twitter",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A chrome extension which lets you to leave comments on other peoples twitter profiles",
     "private": true,
     "scripts": {

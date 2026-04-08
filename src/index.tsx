@@ -60,31 +60,35 @@ waitFor("computeRootMatch", ReactRouter => {
     });
 });
 
-waitFor(
-    m => m.prototype?.render?.toString().includes("props.from"),
-    Route => {
-        patcher.before(Route.prototype, "render", ctx => {
-            const { location, children } = ctx.thisObject.props;
-            if (children.some(c => c?.props?.path === "/i/display") && !children.some(c => c?.props?.path === "/i/reviews")) {
-                // adding modal
-                ctx.thisObject.props.children.unshift(
-                    React.cloneElement(
-                        children.find(c => c?.props?.path === "/i/display"),
-                        {
-                            path: "/i/reviews",
-                            modalSize: "dynamic",
-                            withBackground: true,
-                            key: "/i/reviews",
-                            restoreBackgroundFromPreviousPath: true,
-                            component: ReviewsView
-                        }
-                    )
-                );
-            }
+waitFor("withRouter",
+    Router => {
+        console.log("Found Route component, patching it");
+        patcher.before(Router.Route.prototype, "render", ctx => {
+            let { location } = ctx.thisObject.props;
 
-            if (location) return;
+            const children = findInReactTree(ctx.thisObject, m => m?.some?.(c => c?.props?.path === "/i/display"));
 
-            if (!children.some(c => c?.props?.path?.endsWith("/media")) || location) return;
+            console.log(children);
+
+            if (!children || children?.some?.(c => c?.props?.path === "/i/reviews")) return;
+
+            // adding modal
+            children.unshift(
+                React.cloneElement(
+                    children.find(c => c?.props?.path === "/i/display"),
+                    {
+                        path: "/i/reviews",
+                        modalSize: "dynamic",
+                        withBackground: true,
+                        key: "/i/reviews",
+                        restoreBackgroundFromPreviousPath: true,
+                        component: ReviewsView
+                    }
+                )
+            );
+
+
+            if (!children.some(c => c?.props?.path?.endsWith?.("/media")) || location) return;
             let kid = ctx.thisObject.props.children[0];
 
             const { userId } = findInReactTree(ctx.thisObject, m => m?.userId);
@@ -113,12 +117,13 @@ waitFor("getDerivedStateFromError", m => {
     });
 });
 
-waitFor(
-    m => m.prototype?._renderLinks,
+waitFor("_renderLinks",
     Links => {
         patcher.after(Links.prototype, "render", ctx => {
             //if (!ctx.result?.key?.includes("Tweets-")) return; keys are localized so this wont work on other languages
 
+            console.log("Patching Links component");
+            console.log(ctx);
             let kid = ctx.result.props.children[0];
             const pathName = kid.props.to.pathname;
 

@@ -61,7 +61,7 @@ function patchModule(modules: WebpackRequireModules, id: string) {
         // There are (at the time of writing) 2 modules exporting the window
         // Make these non enumerable to improve webpack search performance
         if (module.exports === window) {
-            Object.defineProperty(require.c, id, {
+            Object.defineProperty(require.m, id, {
                 value: require.c[id],
                 enumerable: false,
                 configurable: true,

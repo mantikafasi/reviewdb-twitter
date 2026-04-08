@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "ReviewDB Twitter",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Allows you to review other Twitter users",
     "icons": {
         "16": "icons/icon_16.png",
@@ -13,7 +13,7 @@
     "web_accessible_resources": [
         {
             "resources": ["bundle.js", "bundle.css"],
-            "matches": ["https://twitter.com/*"]
+            "matches": ["https://twitter.com/*", "https://x.com/*"]
         },
         {
             "resources": ["authpage.html"],
@@ -26,7 +26,7 @@
 
     "content_scripts": [
         {
-            "matches": ["https://twitter.com/*"],
+            "matches": ["https://twitter.com/*", "https://x.com/*"],
             "run_at": "document_start",
             "js": ["content.js"]
         },
@@ -45,7 +45,8 @@
     "externally_connectable": {
         "matches": [
             "https://manti.vendicated.dev/api/reviewdb-twitter/auth",
-            "https://twitter.com/*"
+            "https://twitter.com/*",
+            "https://x.com/*"
         ]
     }
 }
