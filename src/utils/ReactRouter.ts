@@ -10,8 +10,7 @@ export let ReactRouter = {} as {
 };
 
 waitFor(filters.byProps("useHistory"), (Module, id) => {
-    logger.info("Found React Router, mapping it");
-    ReactRouter =Module;
+    ReactRouter = Module;
 
     // ReactRouter = mapMangledModule(id, {
     //     useHistory: m => m?.toString().match(hooksPattern),

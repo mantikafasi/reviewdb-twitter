@@ -149,43 +149,65 @@ waitFor("_renderLinks",
 );
 
 waitFor(
-    m => m?.Promoted,
+    m => m.UserProfileCardContainer?.prototype?.render,
     m => {
-        patcher.before(m.prototype, "render", ctx => {
-            let followButton = ctx.thisObject.props.followButton;
+        patcher.before(m.UserProfileCardContainer.prototype, "render", ctx => {
+            if (ctx.thisObject.__renderFollowAlreadyChangedAI) {
+                return;
+            }
+            ctx.thisObject.__renderFollowAlreadyChangedAI = true;
 
-            ctx.thisObject.props.followButton = [
-                React.createElement(
-                    () => {
-                        try {
-                            let history = ReactRouter.useHistory();
-                            //let location = ReactRouter.useLocation();
-                            //console.log(location);
-                            return (<div className="popout-div">
-                                <a href={"/i/reviews?userId=" + ctx.thisObject.props.userId} onClick={(e) => {
-                                    e.preventDefault();
-                                    // { background: location, previousLocation: location, previousPath: "/home" }
-                                    (Array.from(document.querySelectorAll("[data-testid]")) as any).find(m => m?.dataset?.testid === "HoverCard").remove();
+            const followButton = ctx.thisObject._renderFollowUserButton;
+            ctx.thisObject._renderFollowUserButton = () =>
+                React.createElement(() => {
+                    try {
+                        let history = ReactRouter.useHistory();
+                        //let location = ReactRouter.useLocation();
+                        //console.log(location);
+                        return (
+                            <>
+                                <div className="popout-div">
+                                    <a
+                                        href={"/i/reviews?userId=" + ctx.thisObject.props.userId}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            // { background: location, previousLocation: location, previousPath: "/home" }
+                                            (
+                                                Array.from(
+                                                    document.querySelectorAll("[data-testid]")
+                                                ) as any
+                                            )
+                                                .find(m => m?.dataset?.testid === "HoverCard")
+                                                .remove();
 
-                                    history.push("/i/reviews?userId=" + ctx.thisObject.props.userId);
-                                }}>
-                                    <button className="popout-twitter-button">
-                                        <span className="popout-span">
-                                            Reviews
-                                        </span>
-                                    </button>
-                                </a>
-                            </div >
-                            )
-                        } catch (e) {
-                            logger.error(e);
-                            return null;
-                        }
+                                            history.push(
+                                                "/i/reviews?userId=" + ctx.thisObject.props.userId
+                                            );
+                                        }}
+                                    >
+                                        <button className="popout-twitter-button">
+                                            <span className="popout-span">Reviews</span>
+                                        </button>
+                                    </a>
+                                </div>
+                                {followButton()}
+                            </>
+                        );
+                    } catch (e) {
+                        logger.error(e);
+                        return null;
                     }
-                )
-                ,
-                followButton
-            ];
+                });
         });
     }
 );
+
+
+waitFor(e=>e.ZP?.render?.toString().includes(",{tweet:"), m=> {
+    console.log("Found viewport component, patching it");
+
+    patcher.before(m.ZP, "render", ctx => {
+        console.log("Patching viewport component");
+        console.log(ctx);
+    });
+})
